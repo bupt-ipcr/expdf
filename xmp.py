@@ -3,16 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 21:20
+@edit time: 2020-04-14 21:46
 @FilePath: /xmp.py
-@desc: 
-    ~~~~~~
+@desc: 获取PDF中的XMP信息，并将其转换为特定格式返回
 
-    Parses XMP metadata from PDF files.
-
-    By Matt Swain. Released under the MIT license.
-
-    http://blog.matt-swain.com/post/25650072381/a-lightweight-xmp-parser-for-extracting-pdf
+Parses XMP metadata from PDF files.
+By Matt Swain. Released under the MIT license.
+http://blog.matt-swain.com/post/25650072381/a-lightweight-xmp-parser-for-extracting-pdf
 """
 
 from collections import defaultdict
