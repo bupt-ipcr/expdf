@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 17:53
+@edit time: 2020-04-14 21:30
 @FilePath: /xxpdf.py
 @desc: 
 """
@@ -85,67 +85,76 @@ def resolve_PDFObjRef(obj_ref):
             # print("->", a["A"]["URI"])
             return (obj_resolved["A"]["URI"].decode("utf-8"),
                                 curpage)
-                
-uri = "test.pdf"
-password, pagenos, maxpages = '', [], 0
+            
 
-pdf_stream = open(uri, "rb")
-parser = PDFParser(pdf_stream)
-doc = PDFDocument(parser, password=password, caching=True)
+def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):    
+    password, pagenos, maxpages = '', [], 0
 
-# Secret Metadata
-if 'Metadata' in doc.catalog:
-    metadata = resolve1(doc.catalog['Metadata']).get_data()
+    pdf_stream = open(uri, "rb")
+    parser = PDFParser(pdf_stream)
+    doc = PDFDocument(parser, password=password, caching=True)
 
-# Extract Content
-text_io = BytesIO()
-rsrcmgr = PDFResourceManager(caching=True)
-converter = TextConverter(rsrcmgr, text_io, codec="utf-8",
-                            laparams=LAParams(), imagewriter=None)
-interpreter = PDFPageInterpreter(rsrcmgr, converter)
-metadata = xmp_to_dict(metadata)
-metadata["Pages"] = 0
-curpage = 0
+    # Secret Metadata
+    if 'Metadata' in doc.catalog:
+        metadata = resolve1(doc.catalog['Metadata']).get_data()
 
-references = []
-for page in PDFPage.get_pages(pdf_stream, pagenos=pagenos,
-                                maxpages=maxpages, password=password,
-                                caching=True, check_extractable=False):
-    # Read page contents
-    interpreter.process_page(page)
-    metadata["Pages"] += 1
-    curpage += 1
+    # Extract Content
+    text_io = BytesIO()
+    rsrcmgr = PDFResourceManager(caching=True)
+    converter = TextConverter(rsrcmgr, text_io, codec="utf-8",
+                                laparams=LAParams(), imagewriter=None)
+    interpreter = PDFPageInterpreter(rsrcmgr, converter)
+    metadata = xmp_to_dict(metadata)
+    metadata["Pages"] = 0
+    curpage = 0
 
-    # Collect URL annotations
-    # try:
-    if page.annots:
-        refs = resolve_PDFObjRef(page.annots)
-        if refs:
-            if isinstance(refs, list):
-                for ref in refs:
-                    if ref:
-                        references.append(ref)
-            references.append(refs)
+    references = []
+    for page in PDFPage.get_pages(pdf_stream, pagenos=pagenos,
+                                    maxpages=maxpages, password=password,
+                                    caching=True, check_extractable=False):
+        # Read page contents
+        interpreter.process_page(page)
+        metadata["Pages"] += 1
+        curpage += 1
 
-    # except Exception as e:
-        # logger.warning(str(e))
+        # Collect URL annotations
+        # try:
+        if page.annots:
+            refs = resolve_PDFObjRef(page.annots)
+            if refs:
+                if isinstance(refs, list):
+                    for ref in refs:
+                        if ref:
+                            references.append(ref)
+                references.append(refs)
+
+        # except Exception as e:
+            # logger.warning(str(e))
 
 
-# Get text from stream
-text = text_io.getvalue().decode("utf-8")
-text_io.close()
-converter.close()
-# print(text)
+    # Get text from stream
+    text = text_io.getvalue().decode("utf-8")
+    text_io.close()
+    converter.close()
+    # print(text)
 
-# Extract URL references from text
-for url in extract_urls(text):
-    references.append((url, curpage))
+    # Extract URL references from text
+    for url in extract_urls(text):
+        references.append((url, curpage))
 
-for ref in extract_arxiv(text):
-    references.append((ref, curpage))
+    for ref in extract_arxiv(text):
+        references.append((ref, curpage))
 
-for ref in extract_doi(text):
-    references.append((ref, curpage))
-    
-pprint(metadata)
-pprint(references)
+    for ref in extract_doi(text):
+        references.append((ref, curpage))
+        
+    pdf_json = {
+        'metadata': metadata,
+        'references': references
+    }
+    return pdf_json
+
+if __name__ == '__main__':
+    metadata, references = resolve_pdf().values()
+    pprint(metadata)
+    pprint(references)
