@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 21:30
+@edit time: 2020-04-14 21:48
 @FilePath: /xxpdf.py
 @desc: 
 """
@@ -48,7 +48,7 @@ def extract_doi(text):
     return set([r.strip(".") for r in res])
 
 
-def resolve_PDFObjRef(obj_ref):
+def resolve_PDFObjRef(obj_ref, curpage):
     """
     Resolves PDFObjRef objects. Returns either None, a Reference object or
     a list of Reference objects.
@@ -120,7 +120,7 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
         # Collect URL annotations
         # try:
         if page.annots:
-            refs = resolve_PDFObjRef(page.annots)
+            refs = resolve_PDFObjRef(page.annots, curpage)
             if refs:
                 if isinstance(refs, list):
                     for ref in refs:
