@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 17:55
+@edit time: 2020-04-15 23:45
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -12,45 +12,49 @@ Web url matching:
 * https://gist.github.com/gruber/889161
 """
 
+from collections import namedtuple
 from pdfminer.pdftypes import PDFObjRef
 import re
-from .utils import get_urls, get_arxivs, get_dois
+from utils import get_urls, get_arxivs, get_dois
+
+Reference = namedtuple('Reference', 'uri, reftype')
 
 
-class Reference:
+class References:
     """ Generic Reference """
-    def __init__(self, uri, page=0):
-        self.ref = uri
-        self.reftype = "url"
-        self.page = page
 
-        # Detect reftype by filetype
+    def __init__(self, uri):
+        refs = []
+
+        # 处理ref
         if uri.lower().endswith(".pdf"):
-            self.reftype = "pdf"
-            return
+            refs.append(Reference(uri, 'pdf'))
+        else:
+            for arxiv_uri in get_arxivs(uri):
+                refs.append(Reference(uri, 'pdf'))
+            for doi_uri in get_dois(uri):
+                refs.append(Reference(uri, 'pdf'))
+        # 如果refs中没有内容，则使用默认值
+        if not refs:
+            refs.append(Reference(uri, 'url'))
 
-        # Detect reftype by extractor
-        arxivs = get_arxivs(uri)
-        if arxivs:
-            self.ref = arxivs.pop()
-            self.reftype = "arxiv"
-            return
+    @classmethod
+    def from_refs(cls, refs):
+        """从一组Reference创建References的构造函数"""
+        self.refs = refs.copy()
 
-        dois = get_dois(uri)
-        if dois:
-            self.ref = dois.pop()
-            self.reftype = "doi"
-            return
+    @property
+    def data(self):
+        return self.refs
 
-    def __hash__(self):
-        return hash(self.ref)
-
-    def __eq__(self, other):
-        assert isinstance(other, Reference)
-        return self.ref == other.ref
-
-    def __str__(self):
-        return "<%s: %s>" % (self.reftype, self.ref)
+    def __add__(self, other):
+        """满足References之间的加法"""
+        if isinstance(other, References):
+            refs = self.data.copy()
+            refs.extend(other.data.copy())
+            return References.from_refs(refs)
+        else:
+            raise TypeError("only support operand type(s) for +: 'References' and 'References'")
 
 
 def resolve_PDFObjRef(obj_ref, curpage):
@@ -72,8 +76,7 @@ def resolve_PDFObjRef(obj_ref, curpage):
         obj_resolved = obj_resolved.decode("utf-8")
 
     if isinstance(obj_resolved, str):
-        ref = obj_resolved
-        return Reference(ref, curpage)
+        return References(obj_resolved)
 
     if isinstance(obj_resolved, list):
         return [resolve_PDFObjRef(o) for o in obj_resolved]
@@ -88,4 +91,4 @@ def resolve_PDFObjRef(obj_ref, curpage):
 
         if "URI" in obj_resolved["A"]:
             # print("->", a["A"]["URI"])
-            return Reference(obj_resolved["A"]["URI"].decode("utf-8"), curpage)
+            return References(obj_resolved["A"]["URI"].decode("utf-8"))
