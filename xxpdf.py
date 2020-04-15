@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 22:11
+@edit time: 2020-04-15 11:34
 @FilePath: /xxpdf.py
 @desc: 
 """
@@ -46,6 +46,68 @@ def extract_doi(text):
     return set([r.strip(".") for r in res])
 
 
+def get_metadata(doc: PDFDocument):
+    """从文档中解析metadata
+    新版PDF在metadata中以XMP格式存储信息
+    通过读取raw xmp数据，并转换为json格式返回
+
+    @param doc: PDFDocument对象
+    @return: json格式的metadata，若没找到则返回{}
+    """
+    if 'Metadata' in doc.catalog:
+        # resolve1循环解析对象，直到被解析的对象不是PDFObjRef对象为止，相当于获取裸对象
+        # resolve1(doc.catalog['Metadata']) 结果是PDFStream, get_data 获取裸数据
+        metadata = resolve1(doc.catalog['Metadata']).get_data()
+        # 使用xmp_to_dict函数解析XMP文档，获取metadata
+        metadata = xmp_to_dict(metadata)
+    else:
+        metadata = {}
+    return metadata
+
+
+def process_text(doc: PDFDocument):
+    """处理doc文档中的text信息
+    将每页的信息通过 interpreter 处理到text_io中
+    并且在处理每页信息的时候将注释信息处理
+
+    @param doc: PDFDocument对象
+    @return
+        text: str 整个doc中的text信息
+        annots_list: list 整个doc中的所有annots的列表
+    """
+    # 准备解析器
+    text_io = BytesIO()
+    rsrcmgr = PDFResourceManager(caching=True)
+    converter = TextConverter(rsrcmgr, text_io, codec="utf-8",
+                              laparams=LAParams(), imagewriter=None)
+    interpreter = PDFPageInterpreter(rsrcmgr, converter)
+    curpage = 0
+    annots_list = []
+    # 遍历page
+    for page in doc.get_pages():
+        # Read page contents
+        interpreter.process_page(page)
+        curpage += 1
+
+        # Collect URL annotations
+        # try:
+        if page.annots:
+            annots_list.append((page.annots, curpage))
+            refs = resolve_PDFObjRef(page.annots, curpage)
+            if refs:
+                if isinstance(refs, list):
+                    for ref in refs:
+                        if ref:
+                            references.append(ref)
+                references.append(refs)
+
+    # Get text from stream
+    text = text_io.getvalue().decode("utf-8")
+    text_io.close()
+    converter.close()
+    return text, annots_list
+
+
 def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     # 将PDF文件打开为stream
     pdf_stream = open(uri, "rb")
@@ -55,14 +117,7 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     doc = PDFDocument(parser, password=password, caching=True)
 
     # 获取metadata（如果有）
-    if 'Metadata' in doc.catalog:
-        # resolve1循环解析对象，直到被解析的对象不是PDFObjRef对象为止，相当于获取裸对象
-        # resolve1(doc.catalog['Metadata']) 结果是PDFStream, get_data 获取裸数据
-        metadata = resolve1(doc.catalog['Metadata']).get_data()
-        # 使用xmp_to_dict函数解析XMP文档，获取metadata
-        metadata = xmp_to_dict(metadata)
-    else:
-        metadata = {}
+    metadata = get_metadata(doc)
 
     # Extract Content
     text_io = BytesIO()
@@ -100,7 +155,7 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     text = text_io.getvalue().decode("utf-8")
     text_io.close()
     converter.close()
-    # print(text)
+    print(text)
 
     # Extract URL references from text
     for url in extract_urls(text):
@@ -113,6 +168,7 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
         references.append((ref, curpage))
 
     pdf_json = {
+        'text': text,
         'metadata': metadata,
         'references': references
     }
