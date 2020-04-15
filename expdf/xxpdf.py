@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 17:19
-@FilePath: /xxpdf.py
+@edit time: 2020-04-15 17:33
+@FilePath: /expdf/xxpdf.py
 @desc: 
 """
 from pathlib import Path
@@ -79,6 +79,16 @@ def get_stream(uri, local=False):
     return filename, stream
 
 
+def get_info(doc: PDFDocument):
+    """从文档中获取info
+    旧版PDF将info存储在info字段中   
+
+    @param doc: PDFDocument对象
+    @return: doc中的info信息
+    """
+    return doc.info
+
+
 def get_metadata(doc: PDFDocument):
     """从文档中解析metadata
     新版PDF在metadata中以XMP格式存储信息
@@ -136,7 +146,7 @@ def process_text(doc: PDFDocument):
     return text, annots_list, maxpage
 
 
-def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
+def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     # 将PDF文件打开为stream
     fname, pdf_stream = get_stream(uri)
 
@@ -144,8 +154,12 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     parser = PDFParser(pdf_stream)
     doc = PDFDocument(parser, password=password, caching=True)
 
+    # 获取info
+    info = get_info(doc)
     # 获取metadata（如果有）
     metadata = get_metadata(doc)
+    
+    # 获取pdf text信息和annots列表
     text, annots_list, maxpage = process_text(doc)
 
     references = []
