@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 21:57
-@FilePath: /ref_resolve.py
+@edit time: 2020-04-15 17:55
+@FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
 Web url matching:
@@ -14,6 +14,44 @@ Web url matching:
 
 from pdfminer.pdftypes import PDFObjRef
 import re
+from .utils import get_urls, get_arxivs, get_dois
+
+
+class Reference:
+    """ Generic Reference """
+    def __init__(self, uri, page=0):
+        self.ref = uri
+        self.reftype = "url"
+        self.page = page
+
+        # Detect reftype by filetype
+        if uri.lower().endswith(".pdf"):
+            self.reftype = "pdf"
+            return
+
+        # Detect reftype by extractor
+        arxivs = get_arxivs(uri)
+        if arxivs:
+            self.ref = arxivs.pop()
+            self.reftype = "arxiv"
+            return
+
+        dois = get_dois(uri)
+        if dois:
+            self.ref = dois.pop()
+            self.reftype = "doi"
+            return
+
+    def __hash__(self):
+        return hash(self.ref)
+
+    def __eq__(self, other):
+        assert isinstance(other, Reference)
+        return self.ref == other.ref
+
+    def __str__(self):
+        return "<%s: %s>" % (self.reftype, self.ref)
+
 
 def resolve_PDFObjRef(obj_ref, curpage):
     """
@@ -35,7 +73,7 @@ def resolve_PDFObjRef(obj_ref, curpage):
 
     if isinstance(obj_resolved, str):
         ref = obj_resolved
-        return (ref, curpage)
+        return Reference(ref, curpage)
 
     if isinstance(obj_resolved, list):
         return [resolve_PDFObjRef(o) for o in obj_resolved]
@@ -50,5 +88,4 @@ def resolve_PDFObjRef(obj_ref, curpage):
 
         if "URI" in obj_resolved["A"]:
             # print("->", a["A"]["URI"])
-            return (obj_resolved["A"]["URI"].decode("utf-8"),
-                                curpage)
+            return Reference(obj_resolved["A"]["URI"].decode("utf-8"), curpage)
