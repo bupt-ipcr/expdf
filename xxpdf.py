@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 11:43
+@edit time: 2020-04-15 11:48
 @FilePath: /xxpdf.py
 @desc: 
 """
@@ -85,7 +85,7 @@ def process_text(doc: PDFDocument):
     curpage = 0
     annots_list = []
     # 遍历page
-    for page in doc.get_pages():
+    for page in PDFPage.create_pages(doc):
         # Read page contents
         interpreter.process_page(page)
         curpage += 1
@@ -94,13 +94,6 @@ def process_text(doc: PDFDocument):
         # try:
         if page.annots:
             annots_list.append((page.annots, curpage))
-            refs = resolve_PDFObjRef(page.annots, curpage)
-            if refs:
-                if isinstance(refs, list):
-                    for ref in refs:
-                        if ref:
-                            references.append(ref)
-                references.append(refs)
 
     # Get text from stream
     text = text_io.getvalue().decode("utf-8")
@@ -120,8 +113,9 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
 
     # 获取metadata（如果有）
     metadata = get_metadata(doc)
-
     text, annots_list, maxpage = process_text(doc)
+    
+    references = []
     for annots_item in annots_list:
         refs = resolve_PDFObjRef(*annots_list)
         if refs:
@@ -151,6 +145,6 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
 
 
 if __name__ == '__main__':
-    metadata, references = resolve_pdf().values()
-    pprint(metadata)
-    pprint(references)
+    pdf = resolve_pdf()
+    pprint(pdf['metadata'])
+    pprint(pdf['references'])
