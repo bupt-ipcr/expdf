@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 23:48
+@edit time: 2020-04-16 00:07
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -39,11 +39,17 @@ class References:
         # 如果refs中没有内容，则使用默认值
         if not refs:
             refs.append(Reference(uri, 'url'))
+        self.refs = refs
 
     @classmethod
     def from_refs(cls, refs):
         """从一组Reference创建References的构造函数"""
-        self.refs = refs.copy()
+        obj = cls()
+        if refs:
+            obj.refs = list(refs).copy()
+        else:
+            obj.refs = []
+        return obj
 
     @property
     def data(self):
@@ -56,7 +62,7 @@ class References:
             refs.extend(other.data.copy())
             return References.from_refs(refs)
         else:
-            raise TypeError("only support operand type(s) for +: 'References' and 'References'")
+            raise TypeError(f"unsupported operand type(s) for +: 'References' and '{type(other).__name__}'")
 
 
 def resolve_PDFObjRef(obj_ref, curpage):
