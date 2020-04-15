@@ -3,10 +3,12 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 11:48
+@edit time: 2020-04-15 17:19
 @FilePath: /xxpdf.py
 @desc: 
 """
+from pathlib import Path
+import requests
 from ref_resolve import resolve_PDFObjRef
 import re
 from xmp import xmp_to_dict
@@ -44,6 +46,37 @@ def extract_doi(text):
     DOI_REGEX = r"""DOI:\s?([^\s,]+)"""
     res = set(re.findall(DOI_REGEX, text, re.IGNORECASE))
     return set([r.strip(".") for r in res])
+
+
+def get_stream(uri, local=False):
+    """将给定uri转换为stream
+
+    在uri中查找url
+    如果强制使用本地文件，或者没找到url，则尝试在本地打开文件
+    若在本地找不到文件则报错，否则将文件打开为stream
+
+    如果不强制且找到了url，则向网络请求，返回数据转为stream
+
+    @param uri: 资源链接
+    @param local: 是否强制在本地查找 default False
+
+    @return: stream, filename
+    """
+    # 尝试在uri中查找url
+    urls = extract_urls(uri)
+    local = local or not urls
+
+    if local:
+        path = Path(uri)
+        if not path.exists():
+            raise FileNotFoundError(f"Invalid local filename: {uri}")
+        else:
+            filename, stream = path.name, path.open("rb")
+    else:
+        content = requests.get(uri).content
+        filename, stream = uri.split("/")[-1], BytesIO(content)
+
+    return filename, stream
 
 
 def get_metadata(doc: PDFDocument):
@@ -105,7 +138,7 @@ def process_text(doc: PDFDocument):
 
 def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     # 将PDF文件打开为stream
-    pdf_stream = open(uri, "rb")
+    fname, pdf_stream = get_stream(uri)
 
     # 使用PDFMiner解析stram内容
     parser = PDFParser(pdf_stream)
@@ -114,7 +147,7 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     # 获取metadata（如果有）
     metadata = get_metadata(doc)
     text, annots_list, maxpage = process_text(doc)
-    
+
     references = []
     for annots_item in annots_list:
         refs = resolve_PDFObjRef(*annots_list)
@@ -124,7 +157,6 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
                     if ref:
                         references.append(ref)
             references.append(refs)
-
 
     # Extract URL references from text
     for url in extract_urls(text):
