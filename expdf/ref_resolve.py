@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 23:45
+@edit time: 2020-04-15 23:48
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -23,9 +23,11 @@ Reference = namedtuple('Reference', 'uri, reftype')
 class References:
     """ Generic Reference """
 
-    def __init__(self, uri):
+    def __init__(self, uri=None):
         refs = []
-
+        if not uri:
+            self.refs = refs
+            return
         # 处理ref
         if uri.lower().endswith(".pdf"):
             refs.append(Reference(uri, 'pdf'))
