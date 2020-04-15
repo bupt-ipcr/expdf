@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-15 11:34
+@edit time: 2020-04-15 11:43
 @FilePath: /xxpdf.py
 @desc: 
 """
@@ -74,6 +74,7 @@ def process_text(doc: PDFDocument):
     @return
         text: str 整个doc中的text信息
         annots_list: list 整个doc中的所有annots的列表
+        maxpage: doc的最大页码
     """
     # 准备解析器
     text_io = BytesIO()
@@ -105,7 +106,8 @@ def process_text(doc: PDFDocument):
     text = text_io.getvalue().decode("utf-8")
     text_io.close()
     converter.close()
-    return text, annots_list
+    maxpage = curpage
+    return text, annots_list, maxpage
 
 
 def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
@@ -119,53 +121,26 @@ def resolve_pdf(uri='test.pdf', password='', pagenos=[], maxpages=0):
     # 获取metadata（如果有）
     metadata = get_metadata(doc)
 
-    # Extract Content
-    text_io = BytesIO()
-    rsrcmgr = PDFResourceManager(caching=True)
-    converter = TextConverter(rsrcmgr, text_io, codec="utf-8",
-                              laparams=LAParams(), imagewriter=None)
-    interpreter = PDFPageInterpreter(rsrcmgr, converter)
-    metadata["Pages"] = 0
-    curpage = 0
+    text, annots_list, maxpage = process_text(doc)
+    for annots_item in annots_list:
+        refs = resolve_PDFObjRef(*annots_list)
+        if refs:
+            if isinstance(refs, list):
+                for ref in refs:
+                    if ref:
+                        references.append(ref)
+            references.append(refs)
 
-    references = []
-    for page in PDFPage.get_pages(pdf_stream, pagenos=pagenos,
-                                  maxpages=maxpages, password=password,
-                                  caching=True, check_extractable=False):
-        # Read page contents
-        interpreter.process_page(page)
-        metadata["Pages"] += 1
-        curpage += 1
-
-        # Collect URL annotations
-        # try:
-        if page.annots:
-            refs = resolve_PDFObjRef(page.annots, curpage)
-            if refs:
-                if isinstance(refs, list):
-                    for ref in refs:
-                        if ref:
-                            references.append(ref)
-                references.append(refs)
-
-        # except Exception as e:
-            # logger.warning(str(e))
-
-    # Get text from stream
-    text = text_io.getvalue().decode("utf-8")
-    text_io.close()
-    converter.close()
-    print(text)
 
     # Extract URL references from text
     for url in extract_urls(text):
-        references.append((url, curpage))
+        references.append((url, maxpage))
 
     for ref in extract_arxiv(text):
-        references.append((ref, curpage))
+        references.append((ref, maxpage))
 
     for ref in extract_doi(text):
-        references.append((ref, curpage))
+        references.append((ref, maxpage))
 
     pdf_json = {
         'text': text,
