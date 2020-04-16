@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:45
+@edit time: 2020-04-16 18:00
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
@@ -101,20 +101,22 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     # 获取pdf text信息和annots列表
     text, annots_list, maxpage = process_pages(doc)
 
-    links = []
+    links, refs = [], []
     for annots in annots_list:
         annots_links = process_annots(annots)
         if annots_links:
             links.extend(annots_links)
 
     # Extract URL references from text
-    text_links = process_text(text)
+    text_links, text_refs = process_text(text)
     links.extend(text_links)
+    refs.extend(text_refs)
 
     pdf_json = {
         'text': text,
         'metadata': metadata,
-        'links': links
+        'links': links,
+        'refs': refs
     }
     return pdf_json
 
