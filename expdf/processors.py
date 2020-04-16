@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 20:05
+@edit time: 2020-04-16 20:21
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -11,16 +11,46 @@ from io import BytesIO
 from pdfminer.layout import LAParams
 from pdfminer.converter import TextConverter
 from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdftypes import resolve1
 from pdfminer import psparser
 from pdfminer import settings as pdfminer_settings
 import re
 from .utils import Link
 from .utils import flatten, resolve_PDFObjRef
 from .utils import get_urls, get_arxivs, get_dois
+from .xmp import xmp_to_dict
 
 pdfminer_settings.STRICT = False
+
+
+def process_doc(doc: PDFDocument):
+    """解析PDF文档对象
+
+    旧版PDF将info存储在info字段中
+    新版PDF在metadata中以XMP格式存储信息
+    通过读取raw xmp数据，并转换为json格式返回
+
+    @param doc: PDFDocument对象
+    @return: 
+        info: json格式的info信息，若没找到则返回{}
+        metadata: json格式的metadata，若没找到则返回{}
+    """
+    # 如果info是列表，将其解析为json
+    info = doc.info if doc.info else {}
+    if isinstance(info, list):
+        info = info[0]
+    # 获取metadata
+    if 'Metadata' in doc.catalog:
+        # resolve1循环解析对象，直到被解析的对象不是PDFObjRef对象为止，相当于获取裸对象
+        # resolve1(doc.catalog['Metadata']) 结果是PDFStream, get_data 获取裸数据
+        metadata = resolve1(doc.catalog['Metadata']).get_data()
+        # 使用xmp_to_dict函数解析XMP文档，获取metadata
+        metadata = xmp_to_dict(metadata)
+    else:
+        metadata = {}
+    return info, metadata
 
 
 def process_annots(annots):
@@ -74,7 +104,7 @@ def process_pages(doc: PDFDocument):
 
 def process_text(text):
     """处理text
-    
+
     匹配text中的所有links:
         分别使用url arxiv 和 doi 进行匹配，返回所有link的集合
     匹配text中所有refs:

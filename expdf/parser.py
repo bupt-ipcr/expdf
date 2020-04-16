@@ -3,24 +3,23 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 20:07
+@edit time: 2020-04-16 20:21
 @FilePath: /expdf/parser.py
 @desc: 
 """
 from io import BytesIO
 import json
 from pathlib import Path
-from pdfminer.pdftypes import resolve1
+
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer import settings as pdfminer_settings
 from pprint import pprint
 import re
 import requests
-from .processors import process_annots, process_pages, process_text
+from .processors import *
 from .utils import Link
 from .utils import get_urls, get_arxivs, get_dois
-from .xmp import xmp_to_dict
 
 pdfminer_settings.STRICT = False
 
@@ -56,35 +55,6 @@ def get_stream(uri, local=False):
     return filename, stream
 
 
-def get_info(doc: PDFDocument):
-    """从文档中获取info
-    旧版PDF将info存储在info字段中   
-
-    @param doc: PDFDocument对象
-    @return: doc中的info信息
-    """
-    return doc.info
-
-
-def get_metadata(doc: PDFDocument):
-    """从文档中解析metadata
-    新版PDF在metadata中以XMP格式存储信息
-    通过读取raw xmp数据，并转换为json格式返回
-
-    @param doc: PDFDocument对象
-    @return: json格式的metadata，若没找到则返回{}
-    """
-    if 'Metadata' in doc.catalog:
-        # resolve1循环解析对象，直到被解析的对象不是PDFObjRef对象为止，相当于获取裸对象
-        # resolve1(doc.catalog['Metadata']) 结果是PDFStream, get_data 获取裸数据
-        metadata = resolve1(doc.catalog['Metadata']).get_data()
-        # 使用xmp_to_dict函数解析XMP文档，获取metadata
-        metadata = xmp_to_dict(metadata)
-    else:
-        metadata = {}
-    return metadata
-
-
 def expdf_parser(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     """解析pdf"""
     # 将PDF文件打开为stream
@@ -94,16 +64,14 @@ def expdf_parser(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     parser = PDFParser(pdf_stream)
     doc = PDFDocument(parser, password=password, caching=True)
 
-    # 获取info
-    info = get_info(doc)
-    # 获取metadata（如果有）
-    metadata = get_metadata(doc)
-    
+    # 获取info # 获取metadata（如果有）
+    info, metadata = process_doc(doc)
+
     # 获取pdf text信息和annots列表
     text, annots_list, maxpage = process_pages(doc)
 
     links, refs = [], []
-    
+
     # 处理annots，查找link
     for annots in annots_list:
         annots_links = process_annots(annots)
@@ -112,7 +80,7 @@ def expdf_parser(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
 
     # 处理text，查找link和ref
     text_links, text_refs = process_text(text)
-    
+
     links.extend(text_links)
     refs.extend(text_refs)
 
