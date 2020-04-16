@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:15
+@edit time: 2020-04-16 17:23
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -78,14 +78,6 @@ def resolve_PDFObjRef(pdfobj):
     if "A" in obj_resolved:
         if isinstance(obj_resolved["A"], PDFObjRef):
             return resolve_PDFObjRef(obj_resolved["A"])
-
-
-def process_annots(annots):
-    # 通过解析获取嵌套结果
-    nesting_refs = resolve_PDFObjRef(annots)
-    # 将结果平坦化
-    flat_refs = flatten(nesting_refs)
-    return flat_refs
     
 
 def flatten(refs):
