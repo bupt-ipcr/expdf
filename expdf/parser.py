@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 22:23
+@edit time: 2020-04-16 22:25
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -29,7 +29,7 @@ class ExPDFParser:
 
     def __init__(self, uri, local=False):
         filename, stream = get_stream(uri)
-        expdf = expdf_parser(stream)
+        expdf = ex_parser(stream)
         expdf.update({
             'filename': filename
         })
@@ -92,7 +92,7 @@ def get_stream(uri, local=False):
     return filename, stream
 
 
-def expdf_parser(pdf_stream, password='', pagenos=[], maxpages=0):
+def ex_parser(pdf_stream, password='', pagenos=[], maxpages=0):
     """解析pdf stream"""
 
     # 使用PDFMiner解析stram内容
