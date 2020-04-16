@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 19:52
-@FilePath: /expdf/xxpdf.py
+@edit time: 2020-04-16 20:07
+@FilePath: /expdf/parser.py
 @desc: 
 """
 from io import BytesIO
@@ -85,7 +85,8 @@ def get_metadata(doc: PDFDocument):
     return metadata
 
 
-def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
+def expdf_parser(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
+    """解析pdf"""
     # 将PDF文件打开为stream
     fname, pdf_stream = get_stream(uri)
 
@@ -102,13 +103,16 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     text, annots_list, maxpage = process_pages(doc)
 
     links, refs = [], []
+    
+    # 处理annots，查找link
     for annots in annots_list:
         annots_links = process_annots(annots)
         if annots_links:
             links.extend(annots_links)
 
-    # Extract URL references from text
+    # 处理text，查找link和ref
     text_links, text_refs = process_text(text)
+    
     links.extend(text_links)
     refs.extend(text_refs)
 
@@ -123,6 +127,6 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
 
 
 if __name__ == '__main__':
-    pdf = resolve_pdf()
+    pdf = expdf_parser()
     pprint(pdf['metadata'])
     pprint(pdf['links'])
