@@ -33,11 +33,11 @@ class ExPDFParser:
         expdf.update({
             'filename': filename
         })
-        self.expdf = expdf
+        self._data = expdf
 
     @property
     def title(self):
-        info, metadata = self.expdf['info'], self.expdf['metadata']
+        info, metadata = self._data['info'], self._data['metadata']
         # 尝试从info中恢复title
         if 'Title' in info:
             title = info['Title']
@@ -54,11 +54,11 @@ class ExPDFParser:
     
     @property
     def links(self):
-        return self.expdf['links']
+        return self._data['links']
     
     @property
     def refs(self):
-        return self.expdf['refs']
+        return self._data['refs']
 
 
 def get_stream(uri, local=False):
