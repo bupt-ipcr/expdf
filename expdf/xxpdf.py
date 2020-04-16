@@ -3,27 +3,24 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:22
+@edit time: 2020-04-16 17:36
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
-from pathlib import Path
-import requests
-from ref_resolve import process_annots, Reference
-import re
-from xmp import xmp_to_dict
 from io import BytesIO
-from pdfminer.layout import LAParams
-from pdfminer.converter import TextConverter
-from pdfminer.pdftypes import resolve1, PDFObjRef
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+import json
+from pathlib import Path
+from pdfminer.pdftypes import resolve1
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
-from pdfminer import psparser
-from pprint import pprint
-import json
 from pdfminer import settings as pdfminer_settings
+from pprint import pprint
+import re
+import requests
+from .processors import process_annots, process_pages
+from .utils import Reference
+from .xmp import xmp_to_dict
+
 pdfminer_settings.STRICT = False
 
 

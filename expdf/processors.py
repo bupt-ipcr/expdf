@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:30
+@edit time: 2020-04-16 17:36
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -11,13 +11,11 @@ from .utils import flatten, resolve_PDFObjRef
 from io import BytesIO
 from pdfminer.layout import LAParams
 from pdfminer.converter import TextConverter
-from pdfminer.pdftypes import resolve1, PDFObjRef
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
 from pdfminer import psparser
-
+from pdfminer import settings as pdfminer_settings
+pdfminer_settings.STRICT = False
 
 def process_annots(annots):
     """处理annots
