@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 16:23
+@edit time: 2020-04-16 16:29
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -19,11 +19,12 @@ from utils import get_urls, get_arxivs, get_dois
 
 Reference = namedtuple('Reference', 'uri, reftype')
 
+
 def get_refs(uri):
     """获取uri中包含的所有ref
     在uri中依次检测资源类型，并添加到refs中
     如果最终没有找到符合的资源类型，默认为url类型
-    
+
     @param uri: 需要处理的资源
     @return: list ref列表
     """
@@ -41,38 +42,39 @@ def get_refs(uri):
         refs.append(Reference(uri, 'url'))
     return refs
 
-def resolve_PDFObjRef(obj_ref, curpage):
-    """
-    Resolves PDFObjRef objects. Returns either None, a Reference object or
-    a list of Reference objects.
-    """
-    if isinstance(obj_ref, list):
-        return [resolve_PDFObjRef(item) for item in obj_ref]
 
-    # print(">", obj_ref, type(obj_ref))
-    if not isinstance(obj_ref, PDFObjRef):
+def process_PDFObjRef(pdfobj):
+    """处理PDF对象，递归查找所有引用并返回
+    @param pdfobj: PDFObjRef 对象
+    @return: list or nesting lists or None
+    """
+    if isinstance(pdfobj, list):
+        return [process_PDFObjRef(item) for item in pdfobj]
+
+    # print(">", pdfobj, type(pdfobj))
+    if not isinstance(pdfobj, PDFObjRef):
         # print("type not of PDFObjRef")
         return None
 
-    obj_resolved = obj_ref.resolve()
+    obj_resolved = pdfobj.resolve()
     # print("obj_resolved:", obj_resolved, type(obj_resolved))
     if isinstance(obj_resolved, bytes):
         obj_resolved = obj_resolved.decode("utf-8")
 
     if isinstance(obj_resolved, str):
-        return References(obj_resolved)
+        return get_refs(obj_resolved)
 
     if isinstance(obj_resolved, list):
-        return [resolve_PDFObjRef(o) for o in obj_resolved]
+        return [process_PDFObjRef(o) for o in obj_resolved]
 
     if "URI" in obj_resolved:
         if isinstance(obj_resolved["URI"], PDFObjRef):
-            return resolve_PDFObjRef(obj_resolved["URI"])
+            return process_PDFObjRef(obj_resolved["URI"])
 
     if "A" in obj_resolved:
         if isinstance(obj_resolved["A"], PDFObjRef):
-            return resolve_PDFObjRef(obj_resolved["A"])
+            return process_PDFObjRef(obj_resolved["A"])
 
         if "URI" in obj_resolved["A"]:
             # print("->", a["A"]["URI"])
-            return References(obj_resolved["A"]["URI"].decode("utf-8"))
+            return get_refs(obj_resolved["A"]["URI"].decode("utf-8"))
