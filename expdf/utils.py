@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:44
+@edit time: 2020-04-16 17:47
 @FilePath: /expdf/utils.py
 @desc: 
 
@@ -18,7 +18,7 @@ from collections.abc import Iterable
 from pdfminer.pdftypes import PDFObjRef
 import re
 
-Link = namedtuple('Link', 'uri, reftype')
+Link = namedtuple('Link', 'uri, reftype link')
 
 
 def get_urls(text):
