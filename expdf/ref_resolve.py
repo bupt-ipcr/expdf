@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 00:07
+@edit time: 2020-04-16 16:23
 @FilePath: /expdf/ref_resolve.py
 @desc: 解析PDF中的
 
@@ -19,51 +19,27 @@ from utils import get_urls, get_arxivs, get_dois
 
 Reference = namedtuple('Reference', 'uri, reftype')
 
-
-class References:
-    """ Generic Reference """
-
-    def __init__(self, uri=None):
-        refs = []
-        if not uri:
-            self.refs = refs
-            return
-        # 处理ref
-        if uri.lower().endswith(".pdf"):
+def get_refs(uri):
+    """获取uri中包含的所有ref
+    在uri中依次检测资源类型，并添加到refs中
+    如果最终没有找到符合的资源类型，默认为url类型
+    
+    @param uri: 需要处理的资源
+    @return: list ref列表
+    """
+    refs = []
+    # 处理ref
+    if uri.lower().endswith(".pdf"):
+        refs.append(Reference(uri, 'pdf'))
+    else:
+        for arxiv_uri in get_arxivs(uri):
             refs.append(Reference(uri, 'pdf'))
-        else:
-            for arxiv_uri in get_arxivs(uri):
-                refs.append(Reference(uri, 'pdf'))
-            for doi_uri in get_dois(uri):
-                refs.append(Reference(uri, 'pdf'))
-        # 如果refs中没有内容，则使用默认值
-        if not refs:
-            refs.append(Reference(uri, 'url'))
-        self.refs = refs
-
-    @classmethod
-    def from_refs(cls, refs):
-        """从一组Reference创建References的构造函数"""
-        obj = cls()
-        if refs:
-            obj.refs = list(refs).copy()
-        else:
-            obj.refs = []
-        return obj
-
-    @property
-    def data(self):
-        return self.refs
-
-    def __add__(self, other):
-        """满足References之间的加法"""
-        if isinstance(other, References):
-            refs = self.data.copy()
-            refs.extend(other.data.copy())
-            return References.from_refs(refs)
-        else:
-            raise TypeError(f"unsupported operand type(s) for +: 'References' and '{type(other).__name__}'")
-
+        for doi_uri in get_dois(uri):
+            refs.append(Reference(uri, 'pdf'))
+    # 如果refs中没有内容，则使用默认值
+    if not refs:
+        refs.append(Reference(uri, 'url'))
+    return refs
 
 def resolve_PDFObjRef(obj_ref, curpage):
     """
