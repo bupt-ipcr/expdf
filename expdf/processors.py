@@ -3,22 +3,25 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:44
+@edit time: 2020-04-16 19:49
 @FilePath: /expdf/processors.py
 @desc: 
 """
 from io import BytesIO
 from pdfminer.layout import LAParams
 from pdfminer.converter import TextConverter
+from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer import psparser
 from pdfminer import settings as pdfminer_settings
+import re
 from .utils import Link
 from .utils import flatten, resolve_PDFObjRef
 from .utils import get_urls, get_arxivs, get_dois
 
 pdfminer_settings.STRICT = False
+
 
 def process_annots(annots):
     """处理annots
@@ -71,10 +74,27 @@ def process_pages(doc: PDFDocument):
 
 def process_text(text):
     """处理text
-    匹配text中的所有references
+    匹配text中的所有links
+    获取text中所有refs
+
+    @param text: pdf 文本
+    @return links, refs
     """
+    # 处理links
     links = []
-    links.extend(Link(url, 'url') for url in get_urls(text))
-    links.extend(Link(arxiv, 'arxiv') for arxiv in get_arxivs(text))
+    links.extend(Link(url, 'url', url) for url in get_urls(text))
+    links.extend(Link(arxiv, 'arxiv', f'http://arxiv.org/abs/{arxiv}') for arxiv in get_arxivs(text))
+    # TODO: 增加DOI的link信息
     links.extend(Link(doi, 'doi') for doi in get_dois(text))
-    return links
+
+    # 处理refs
+    refs = []
+    lines = text.split('\n')
+    # 找到REFERENCES位置
+    ref_text = text[text.find('REFERENCES'):]
+    ref_text = ref_text.replace('\n', '')
+    ref_lines = re.findall(r'(?<=\[\d\]).*?“.+?”', ref_text)
+    for ref_line in ref_lines:
+        ref = re.search(r'(?<=“).+?(?=”)', ref_line)[0]
+        refs.append(ref)
+    return links, refs
