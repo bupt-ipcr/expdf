@@ -26,6 +26,7 @@ pdfminer_settings.STRICT = False
 
 class ExPDF:
     """解析后的PDF对象"""
+
     def __init__(self, uri, local=False):
         filename, stream = get_stream(uri)
         expdf = expdf_parser(stream)
@@ -33,7 +34,7 @@ class ExPDF:
             'filename': filename
         })
         self.expdf = expdf
-        
+
     @property
     def title(self):
         info, metadata = self.expdf['info'], self.expdf['metadata']
@@ -50,7 +51,8 @@ class ExPDF:
                 return metadata['dc']['title']['x-default']
         # 如果找不到title，则抛出异常
         raise AttributeError("has no attribute 'title'")
-    
+
+
 def get_stream(uri, local=False):
     """将给定uri转换为stream
 
@@ -117,5 +119,4 @@ def expdf_parser(pdf_stream, password='', pagenos=[], maxpages=0):
         'refs': refs
     }
     return pdf_dict
-
 
