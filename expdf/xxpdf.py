@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:19
+@edit time: 2020-04-16 17:22
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
@@ -108,8 +108,8 @@ def get_metadata(doc: PDFDocument):
     return metadata
 
 
-def process_text(doc: PDFDocument):
-    """处理doc文档中的text信息
+def process_pages(doc: PDFDocument):
+    """按页处理doc文档
     将每页的信息通过 interpreter 处理到text_io中
     并且在处理每页信息的时候将注释信息处理
 
@@ -160,7 +160,7 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     metadata = get_metadata(doc)
     
     # 获取pdf text信息和annots列表
-    text, annots_list, maxpage = process_text(doc)
+    text, annots_list, maxpage = process_pages(doc)
 
     references = []
     for annots in annots_list:
