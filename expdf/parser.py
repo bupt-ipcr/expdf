@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 22:25
+@edit time: 2020-04-16 22:31
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -25,7 +25,25 @@ pdfminer_settings.STRICT = False
 
 
 class ExPDFParser:
-    """解析后的PDF对象"""
+    """解析后的PDF对象
+    
+    Params:
+    - uri: resource uri, local file location or url
+    - local: default False, set True to force use local file
+    
+    Attributes:
+    - title
+    - links
+    - refs
+    - info
+    - metadata
+    
+    Usage:
+    >>> expdf_parser = ExPDFParser("tests/test.pdf")
+    >>> expdf_parser.title
+    'A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet'
+    
+    """
 
     def __init__(self, uri, local=False):
         filename, stream = get_stream(uri)
