@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 18:00
+@edit time: 2020-04-16 19:52
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
@@ -114,6 +114,7 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
 
     pdf_json = {
         'text': text,
+        'info': info,
         'metadata': metadata,
         'links': links,
         'refs': refs
