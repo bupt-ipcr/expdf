@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 22:31
+@edit time: 2020-04-16 22:32
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -77,6 +77,14 @@ class ExPDFParser:
     @property
     def refs(self):
         return self._data['refs']
+    
+    @property
+    def info(self):
+        return self._data['info']
+    
+    @property
+    def metadata(self):
+        return self._data['metadata']
 
 
 def get_stream(uri, local=False):
