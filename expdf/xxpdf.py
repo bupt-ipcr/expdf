@@ -3,13 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:17
+@edit time: 2020-04-16 17:19
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
 from pathlib import Path
 import requests
-from ref_resolve import process_annots, References
+from ref_resolve import process_annots, Reference
 import re
 from xmp import xmp_to_dict
 from io import BytesIO
@@ -169,9 +169,9 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
             references.extend(annots_refs)
 
     # Extract URL references from text
-    references += References.from_refs(get_urls(text))
-    references += References.from_refs(get_arxivs(text))
-    references += References.from_refs(get_dois(text))
+    references.extend(Reference(url, 'url') for url in get_urls(text))
+    references.extend(Reference(arxiv, 'arxiv') for arxiv in get_arxivs(text))
+    references.extend(Reference(doi, 'doi') for doi in get_dois(text))
 
     pdf_json = {
         'text': text,
