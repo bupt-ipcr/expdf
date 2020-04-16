@@ -3,13 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 16:36
+@edit time: 2020-04-16 17:17
 @FilePath: /expdf/xxpdf.py
 @desc: 
 """
 from pathlib import Path
 import requests
-from ref_resolve import resolve_PDFObjRef, References
+from ref_resolve import process_annots, References
 import re
 from xmp import xmp_to_dict
 from io import BytesIO
@@ -162,16 +162,11 @@ def resolve_pdf(uri='tests/test.pdf', password='', pagenos=[], maxpages=0):
     # 获取pdf text信息和annots列表
     text, annots_list, maxpage = process_text(doc)
 
-    references = References()
-    for annots_item in annots_list:
-        refs = resolve_PDFObjRef(annots_item)
-        if refs:
-            if isinstance(refs, list):
-                for ref in refs:
-                    if ref:
-                        references += ref
-            else:
-                references += refs
+    references = []
+    for annots in annots_list:
+        annots_refs = process_annots(annots)
+        if annots_refs:
+            references.extend(annots_refs)
 
     # Extract URL references from text
     references += References.from_refs(get_urls(text))
