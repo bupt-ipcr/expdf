@@ -82,14 +82,14 @@ def expdf_parser(pdf_stream, password='', pagenos=[], maxpages=0):
     links.extend(text_links)
     refs.extend(text_refs)
 
-    pdf_json = {
+    pdf_dict = {
         'text': text,
         'info': info,
         'metadata': metadata,
         'links': links,
         'refs': refs
     }
-    return pdf_json
+    return pdf_dict
 
 
 if __name__ == '__main__':
