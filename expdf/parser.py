@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 20:23
+@edit time: 2020-04-16 22:20
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -24,6 +24,33 @@ from .utils import get_urls, get_arxivs, get_dois
 pdfminer_settings.STRICT = False
 
 
+class ExPDF:
+    """解析后的PDF对象"""
+    def __init__(self, uri, local=False):
+        filename, stream = get_stream(uri)
+        expdf = expdf_parser(stream)
+        expdf.update({
+            'filename': filename
+        })
+        self.expdf = expdf
+        
+    @property
+    def title(self):
+        info, metadata = self.expdf['info'], self.expdf['metadata']
+        # 尝试从info中恢复title
+        if 'Title' in info:
+            title = info['Title']
+            if isinstance(title, bytes):
+                return title.decode('utf-8')
+            else:
+                return title
+        # 如果失败，尝试从metadata获取
+        if 'dc' in metadata:
+            if 'title' in metadata['dc']:
+                return metadata['dc']['title']['x-default']
+        # 如果找不到title，则抛出异常
+        raise AttributeError("has no attribute 'title'")
+    
 def get_stream(uri, local=False):
     """将给定uri转换为stream
 
@@ -92,7 +119,3 @@ def expdf_parser(pdf_stream, password='', pagenos=[], maxpages=0):
     return pdf_dict
 
 
-if __name__ == '__main__':
-    pdf = expdf_parser()
-    pprint(pdf['metadata'])
-    pprint(pdf['links'])
