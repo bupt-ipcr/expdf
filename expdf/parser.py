@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 22:21
+@edit time: 2020-04-16 22:23
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -51,6 +51,14 @@ class ExPDFParser:
                 return metadata['dc']['title']['x-default']
         # 如果找不到title，则抛出异常
         raise AttributeError("has no attribute 'title'")
+    
+    @property
+    def links(self):
+        return self.expdf['links']
+    
+    @property
+    def refs(self):
+        return self.expdf['refs']
 
 
 def get_stream(uri, local=False):
