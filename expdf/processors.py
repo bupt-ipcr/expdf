@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:41
+@edit time: 2020-04-16 17:44
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -14,7 +14,7 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer import psparser
 from pdfminer import settings as pdfminer_settings
-from .utils import Reference
+from .utils import Link
 from .utils import flatten, resolve_PDFObjRef
 from .utils import get_urls, get_arxivs, get_dois
 
@@ -25,10 +25,10 @@ def process_annots(annots):
     将annots解析为嵌套refs，再扁平化
     """
     # 通过解析获取嵌套结果
-    nesting_refs = resolve_PDFObjRef(annots)
+    nesting_links = resolve_PDFObjRef(annots)
     # 将结果平坦化
-    flat_refs = flatten(nesting_refs)
-    return flat_refs
+    flat_links = flatten(nesting_links)
+    return flat_links
 
 
 def process_pages(doc: PDFDocument):
@@ -73,8 +73,8 @@ def process_text(text):
     """处理text
     匹配text中的所有references
     """
-    refs = []
-    refs.extend(Reference(url, 'url') for url in get_urls(text))
-    refs.extend(Reference(arxiv, 'arxiv') for arxiv in get_arxivs(text))
-    refs.extend(Reference(doi, 'doi') for doi in get_dois(text))
-    return refs
+    links = []
+    links.extend(Link(url, 'url') for url in get_urls(text))
+    links.extend(Link(arxiv, 'arxiv') for arxiv in get_arxivs(text))
+    links.extend(Link(doi, 'doi') for doi in get_dois(text))
+    return links

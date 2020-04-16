@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:29
+@edit time: 2020-04-16 17:44
 @FilePath: /expdf/utils.py
 @desc: 
 
@@ -18,7 +18,7 @@ from collections.abc import Iterable
 from pdfminer.pdftypes import PDFObjRef
 import re
 
-Reference = namedtuple('Reference', 'uri, reftype')
+Link = namedtuple('Link', 'uri, reftype')
 
 
 def get_urls(text):
@@ -52,27 +52,27 @@ def get_dois(text):
     return set([r.strip(".") for r in res])
 
 
-def get_refs(uri):
-    """获取uri中包含的所有ref
-    在uri中依次检测资源类型，并添加到refs中
+def get_links(uri):
+    """获取uri中包含的所有link
+    在uri中依次检测资源类型，并添加到links中
     如果最终没有找到符合的资源类型，默认为url类型
 
     @param uri: 需要处理的资源
-    @return: list ref列表
+    @return: list link列表
     """
-    refs = []
+    links = []
     # 处理ref
     if uri.lower().endswith(".pdf"):
-        refs.append(Reference(uri, 'pdf'))
+        links.append(Link(uri, 'pdf'))
     else:
         for arxiv_uri in get_arxivs(uri):
-            refs.append(Reference(uri, 'pdf'))
+            links.append(Link(uri, 'pdf'))
         for doi_uri in get_dois(uri):
-            refs.append(Reference(uri, 'pdf'))
-    # 如果refs中没有内容，则使用默认值
-    if not refs:
-        refs.append(Reference(uri, 'url'))
-    return refs
+            links.append(Link(uri, 'pdf'))
+    # 如果links中没有内容，则使用默认值
+    if not links:
+        links.append(Link(uri, 'url'))
+    return links
 
 
 def resolve_PDFObjRef(pdfobj):
@@ -91,7 +91,7 @@ def resolve_PDFObjRef(pdfobj):
 
     # 优先进行短路判断
     if isinstance(obj_resolved, str):
-        return get_refs(obj_resolved)
+        return get_links(obj_resolved)
 
     # bytes: decode
     if isinstance(obj_resolved, bytes):
@@ -111,32 +111,32 @@ def resolve_PDFObjRef(pdfobj):
             return resolve_PDFObjRef(obj_resolved["A"])
 
 
-def flatten(refs):
-    """扁平化refs
+def flatten(links):
+    """扁平化links
 
-    refs只能是Iterable或者是None
-    当refs是None的时候，直接返回[]，否则迭代处理:
-    循环获取refs中的元素
-    - 若元素是Reference实例，则使用append方式添加到flatten_refs中
+    links只能是Iterable或者是None
+    当links是None的时候，直接返回[]，否则迭代处理:
+    循环获取links中的元素
+    - 若元素是Link实例，则使用append方式添加到flatten_links中
     - 若元素是Iterable，则调用flatten处理元素，处理结果是list，使用
-      extend方式添加到fatten_refs中
+      extend方式添加到fatten_links中
     - 若不满足上述格式，则抛出异常
-    完成之后返回flatten_refs
+    完成之后返回flatten_links
 
-    @param refs: refs, list or None
-    @return list, flatten refs
+    @param links: links, list or None
+    @return list, flatten links
     """
-    flatten_refs = []
-    if refs is None:
-        return flatten_refs
-    for item in refs:
+    flatten_links = []
+    if links is None:
+        return flatten_links
+    for item in links:
         if item is None:
             continue
-        if isinstance(item, Reference):
-            flatten_refs.append(item)
+        if isinstance(item, Link):
+            flatten_links.append(item)
         elif isinstance(item, Iterable):
             item = flatten(item)
-            flatten_refs.extend(list(item))
+            flatten_links.extend(list(item))
         else:
-            raise TypeError(f"bad operand type for flatten(): '{type(refs)}'")
-    return flatten_refs
+            raise TypeError(f"bad operand type for flatten(): '{type(links)}'")
+    return flatten_links
