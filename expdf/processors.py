@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 19:52
+@edit time: 2020-04-16 20:05
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -74,8 +74,13 @@ def process_pages(doc: PDFDocument):
 
 def process_text(text):
     """处理text
-    匹配text中的所有links
-    匹配text中所有refs
+    
+    匹配text中的所有links:
+        分别使用url arxiv 和 doi 进行匹配，返回所有link的集合
+    匹配text中所有refs:
+        在text中找到 REFERENCES 的位置，在那之后的文本被视为引用页面
+        在引用页面中匹配以 [n] 开头且包含 “xxx” 的文本
+        将文本重新匹配，只保留“”内部的信息，并去除首末的标点
 
     @param text: pdf 文本
     @return links, refs
@@ -92,9 +97,14 @@ def process_text(text):
     lines = text.split('\n')
     # 找到REFERENCES位置
     ref_text = text[text.find('REFERENCES'):]
+    # 将\n替换掉，以便re搜索
     ref_text = ref_text.replace('\n', '')
+    # 查找[n]开头且包含 “” 的文本
     ref_lines = re.findall(r'(?<=\[\d\]).*?“.+?”', ref_text)
     for ref_line in ref_lines:
+        # 匹配“”中的文本，因为之前匹配过一次，所以一定能search到结果，不需要判断
         ref = re.search(r'(?<=“).+?(?=”)', ref_line)[0]
+        # 删除首末的标点
+        ref = re.sub('[,，.。]$', '', ref)
         refs.append(ref)
     return links, refs
