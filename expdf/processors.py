@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 19:49
+@edit time: 2020-04-16 19:52
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -75,7 +75,7 @@ def process_pages(doc: PDFDocument):
 def process_text(text):
     """处理text
     匹配text中的所有links
-    获取text中所有refs
+    匹配text中所有refs
 
     @param text: pdf 文本
     @return links, refs
