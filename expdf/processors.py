@@ -3,11 +3,11 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 17:25
+@edit time: 2020-04-16 17:30
 @FilePath: /expdf/processors.py
 @desc: 
 """
-from .ref_resolve import flatten, resolve_PDFObjRef
+from .utils import flatten, resolve_PDFObjRef
 from io import BytesIO
 from pdfminer.layout import LAParams
 from pdfminer.converter import TextConverter
@@ -20,6 +20,9 @@ from pdfminer import psparser
 
 
 def process_annots(annots):
+    """处理annots
+    将annots解析为嵌套refs，再扁平化
+    """
     # 通过解析获取嵌套结果
     nesting_refs = resolve_PDFObjRef(annots)
     # 将结果平坦化
