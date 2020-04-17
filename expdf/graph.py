@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 20:17
+@edit time: 2020-04-17 20:22
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -131,7 +131,8 @@ class Graph:
     def explore(self):
         """探索所有节点，设置信息"""
         nodes, calc_queue, cur_group = self.nodes, self.calc_queue, self.cur_group
-        
+        # 准备记录group信息
+        groups = {}
         # 外层循环，遍历nodes
         for node in nodes:
             # 探索过的节点直接略过
@@ -140,6 +141,7 @@ class Graph:
             
             # 未探索过的节点压入计算队列
             cur_group += 1
+            group_nodes = [] # 重置节点列表
             calc_queue.append(node)
             
             # 依次弹出node直到没有为止
@@ -158,8 +160,13 @@ class Graph:
                     posterity.level = min(posterity.level, cur_node.level - 1)
                     if posterity.status == 'unexplored':
                         calc_queue.append(posterity)
-                        
+                # 节点添加到group列表中
+                group_nodes.append(node)
+                
+            # 记录节点列表
+            groups[cur_group] = group_nodes
+            
         # 记录信息
         self.nodes, self.calc_queue, self.cur_group = nodes, calc_queue, cur_group
+        self.groups = groups
                 
-            
