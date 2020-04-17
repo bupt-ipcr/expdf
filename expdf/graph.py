@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:05
+@edit time: 2020-04-17 21:13
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -61,6 +61,11 @@ class PDFNode:
 
 class LocalPDFNode(PDFNode):
     """如果是本地文件，允许创建时覆盖ref"""
+    def __new__(cls, title, refs=None):
+        """获取实例的时候略过refs，在init的时候设置"""
+        obj = PDFNode(title)
+        return obj
+        
     def __init__(self, title, refs=None):
         self.local_file = True
         if refs is not None:
