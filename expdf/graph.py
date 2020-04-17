@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 20:02
+@edit time: 2020-04-17 20:03
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -57,7 +57,7 @@ class PDFNode:
         cls.instances.clear()
         
         
-def calc_graph():
+class Graph:
     """计算所有PDFNode之间的图关系
     
     nodes是所有PDFNode实例的集合
@@ -117,5 +117,5 @@ def calc_graph():
             {"title": xx, "children_title": [xx, xx, ... xx], "parents_title": [xx, xx, ... xx], "local_file": true}
                 
     """
-        
+    
     
