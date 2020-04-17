@@ -39,7 +39,7 @@ class PDFNode:
             cls.instances[title] = obj
 
             # 对于新建对象，需要进行赋值处理
-            obj.title = title
+            obj.title, obj.local_file = title, False
             obj.parents, obj.children = set(), set()
             obj.posterities = set()
             obj.actients = {PDFNode(ref) for ref in refs} if refs is not None else set()
