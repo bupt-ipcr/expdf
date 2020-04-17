@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 20:01
+@edit time: 2020-04-17 20:02
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -39,10 +39,10 @@ class PDFNode:
             # 对于新建对象，需要进行赋值处理
             obj.title = title
             obj.parents, obj.children = set(), set()
-            obj.posterity = set()
+            obj.posterities = set()
             obj.actients = {PDFNode(ref) for ref in refs} if refs is not None else set()
             for node in obj.actients:
-                node.posterity.add(obj)
+                node.posterities.add(obj)
             
             logging.info('create', title, obj.actients)
             
@@ -82,7 +82,7 @@ def calc_graph():
                 即：max(actient_node.level, cur_node.level+1)
                 - 将 actient_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
                 - 如果actient_node未被探索过，则添加到calc_queue中
-            3. 遍历cur_node.posterity
+            3. 遍历cur_node.posterities
                 - 将 posterity_node.level 的上限设置为cur_node.level - 1
                 即：min(posterity_node.level, cur_node.level-1)
                 - 将 posterity_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
@@ -100,8 +100,8 @@ def calc_graph():
             设当前level的节点为 cur_level_nodes，下一level的节点为 next_level_nodes
             a. 若 next_level_nodes 存在
                 对于每个 cur_level_node， 检查所有 next_level_node，
-                若某个下一级的node恰好在posterity中，则为他们建立父子关系
-                即：若 next_level_node in cur_level_node.posterity
+                若某个下一级的 node 恰好在 posterities 中，则为他们建立父子关系
+                即：若 next_level_node in cur_level_node.posterities
                     cur_level_node.children.add(next_level_node)
                     next_level_node.parents.add(cur_level_node)
             b. 若next_level_nodes 不存在，则结束遍历（此时level应该是min_level）
