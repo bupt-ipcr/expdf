@@ -3,12 +3,12 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 11:33
+@edit time: 2020-04-17 21:07
 @FilePath: /tests/test_graph.py
 @desc: 
 """
 
-from expdf.graph import PDFNode
+from expdf.graph import PDFNode, LocalPDFNode
 
 
 class TestPDFNode:
@@ -68,3 +68,29 @@ class TestPDFNode:
         # ta对象应该有posterity，但是没有children
         assert na.children == set()
         assert na.posterity == {n0}
+
+class TestLocalPDFNode:
+    @classmethod
+    def setup_class(cls):
+        PDFNode.clear_nodes()
+        
+    @classmethod
+    def teardown_class(cls):
+        PDFNode.clear_nodes()
+
+    def test_override(self):
+        """测试新建node是否表现正常"""
+        n0 = LocalPDFNode('title0', refs=['ta', 'tb'])
+        
+        has_except = False
+        try:
+            n0 = LocalPDFNode('title0', refs=['ta', 'tc'])
+        except Exception as e:
+            has_except = True
+            
+        assert has_except == False, "Unexpected error in override LocalPDFNode instance"
+        
+        assert n0.actients == {PDFNode('ta'), PDFNode('tb')}
+        assert PDFNode.get_nodes == {PDFNode('n0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')}
+        
+        
