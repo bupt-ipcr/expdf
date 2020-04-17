@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 11:26
+@edit time: 2020-04-17 11:33
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -40,7 +40,7 @@ class PDFNode:
             obj.title = title
             obj.parents, obj.children = set(), set()
             obj.posterity = set()
-            obj.actients = [PDFNode(ref) for ref in refs] if refs is not None else []
+            obj.actients = {PDFNode(ref) for ref in refs} if refs is not None else set()
             for node in obj.actients:
                 node.posterity.add(obj)
             
