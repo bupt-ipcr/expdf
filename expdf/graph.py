@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 22:02
+@edit time: 2020-04-17 22:04
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -200,7 +200,6 @@ class Graph:
     def reorganize(self):
         """重整节点"""
         groups = self.groups
-        records = {}
         for gid, nodes in groups.items():
             # 获得最大的level
             max_level = reduce(max, (node.level for node in nodes))
@@ -232,7 +231,7 @@ class Graph:
                 level -= 1
 
             # 保存levels
-            records[gid] = levels
+            groups[gid] = levels
 
         # 确保信息被保存
-        self.groups, self.records = groups, records
+        self.groups = groups 
