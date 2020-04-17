@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:27
+@edit time: 2020-04-17 22:02
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -179,14 +179,16 @@ class Graph:
                 for actient in cur_node.actients:
                     actient.level = max(actient.level, cur_node.level + 1)
                     if actient.status == 'unexplored':
+                        actient.status = 'appended'
                         calc_queue.append(actient)
                 # 处理 posterities
                 for posterity in cur_node.posterities:
                     posterity.level = min(posterity.level, cur_node.level - 1)
                     if posterity.status == 'unexplored':
+                        posterity.status = 'appended'
                         calc_queue.append(posterity)
                 # 节点添加到group列表中
-                group_nodes.append(node)
+                group_nodes.append(cur_node)
 
             # 记录节点列表
             groups[cur_group] = group_nodes
