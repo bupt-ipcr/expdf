@@ -195,42 +195,42 @@ class Graph:
         self.nodes, self.calc_queue, self.cur_group = nodes, calc_queue, cur_group
         self.groups = groups
 
-        def reorganize(self):
-            """重整节点"""
-            groups = self.groups
-            records = {}
-            for gid, nodes in groups.items():
-                # 获得最大的level
-                max_level = reduce(max, (node.level for node in nodes))
-                # 以max_level 为基准重设 level，并记录
-                levels = defaultdict(list)
-                for node in nodes:
-                    node.level = node.level - max_level
-                    levels[node.level].append(node)
-                # 获取重整后的最小level
-                min_level = reduce(min, (node.level for node in nodes))
+    def reorganize(self):
+        """重整节点"""
+        groups = self.groups
+        records = {}
+        for gid, nodes in groups.items():
+            # 获得最大的level
+            max_level = reduce(max, (node.level for node in nodes))
+            # 以max_level 为基准重设 level，并记录
+            levels = defaultdict(list)
+            for node in nodes:
+                node.level = node.level - max_level
+                levels[node.level].append(node)
+            # 获取重整后的最小level
+            min_level = reduce(min, (node.level for node in nodes))
 
-                # 从0开始向下遍历level，获取当前层的level
-                level = 0
-                while True:
-                    cur_nodes, next_nodes = levels[level], levels[level - 1]
+            # 从0开始向下遍历level，获取当前层的level
+            level = 0
+            while True:
+                cur_nodes, next_nodes = levels[level], levels[level - 1]
 
-                    # 如果没有下一层的节点，则应该结束
-                    if not next_nodes:
-                        break
+                # 如果没有下一层的节点，则应该结束
+                if not next_nodes:
+                    break
 
-                    # 尝试建立父子关系
-                    for cur_node in cur_nodes:
-                        for next_node in next_nodes:
-                            if next_node in cur_node.posterities:
-                                cur_node.children.add(next_node)
-                                next_node.parents.add(cur_node)
+                # 尝试建立父子关系
+                for cur_node in cur_nodes:
+                    for next_node in next_nodes:
+                        if next_node in cur_node.posterities:
+                            cur_node.children.add(next_node)
+                            next_node.parents.add(cur_node)
 
-                    # 每次遍历结束的时候降低一层level
-                    level -= 1
+                # 每次遍历结束的时候降低一层level
+                level -= 1
 
-                # 保存levels
-                records[gid] = levels
+            # 保存levels
+            records[gid] = levels
 
-            # 确保信息被保存
-            self.groups, self.records = groups, records
+        # 确保信息被保存
+        self.groups, self.records = groups, records
