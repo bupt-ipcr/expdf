@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:13
+@edit time: 2020-04-17 21:20
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -58,18 +58,23 @@ class PDFNode:
     def clear_nodes(cls):
         cls.instances.clear()
 
+    def set_refs(self, refs):
+        """提供set refs的方法"""
+        self.actients = {PDFNode(ref) for ref in refs} if refs is not None else set()
+        for node in self.actients:
+            node.posterities.add(self)
+
 
 class LocalPDFNode(PDFNode):
     """如果是本地文件，允许创建时覆盖ref"""
     def __new__(cls, title, refs=None):
         """获取实例的时候略过refs，在init的时候设置"""
         obj = PDFNode(title)
-        return obj
-        
-    def __init__(self, title, refs=None):
-        self.local_file = True
+        obj.local_file = True
         if refs is not None:
-            self.refs = refs
+            obj.set_refs(refs)
+        return obj
+
 
 class Graph:
     """计算所有PDFNode之间的图关系
@@ -139,7 +144,7 @@ class Graph:
         self.initialize()
         self.explore()
         self.reorganize()
-        
+
     def initialize(self):
         """初始化信息"""
         for node in self.nodes:
