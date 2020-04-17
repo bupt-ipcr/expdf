@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 10:59
+@edit time: 2020-04-17 11:19
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -40,3 +40,8 @@ def test_newnode():
     assert n0.title == 'title0'
     # n0的refs不应该被覆盖
     assert n0.actients == [PDFNode('ta'), PDFNode('tb')]
+    
+    # ta对象应该有posterity，但是没有children
+    na = PDFNode('ta')
+    assert na.children == set()
+    assert na.posterity == {n0}
