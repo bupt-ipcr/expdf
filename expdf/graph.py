@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:20
+@edit time: 2020-04-17 21:27
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -181,7 +181,7 @@ class Graph:
                     if actient.status == 'unexplored':
                         calc_queue.append(actient)
                 # 处理 posterities
-                for posterity in cur_node.posteriors:
+                for posterity in cur_node.posterities:
                     posterity.level = min(posterity.level, cur_node.level - 1)
                     if posterity.status == 'unexplored':
                         calc_queue.append(posterity)
