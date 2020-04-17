@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:07
+@edit time: 2020-04-17 21:08
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -67,7 +67,7 @@ class TestPDFNode:
         
         # ta对象应该有posterity，但是没有children
         assert na.children == set()
-        assert na.posterity == {n0}
+        assert na.posterities == {n0}
 
 class TestLocalPDFNode:
     @classmethod
