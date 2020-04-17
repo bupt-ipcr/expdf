@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:08
+@edit time: 2020-04-17 21:24
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -84,13 +84,13 @@ class TestLocalPDFNode:
         
         has_except = False
         try:
-            n0 = LocalPDFNode('title0', refs=['ta', 'tc'])
+            n0copy = LocalPDFNode('title0', refs=['ta', 'tc'])
         except Exception as e:
             has_except = True
             
         assert has_except == False, "Unexpected error in override LocalPDFNode instance"
         
-        assert n0.actients == {PDFNode('ta'), PDFNode('tb')}
-        assert PDFNode.get_nodes == {PDFNode('n0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')}
+        assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
+        assert PDFNode.get_nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
         
         
