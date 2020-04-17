@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 20:08
+@edit time: 2020-04-17 20:17
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -77,15 +77,14 @@ class Graph:
             开始遍历calc_queue，依次弹出cur_node
             
             1. 将 status 设置为 'explored'
+                group 设置为 cur_group
             2. 遍历cur_node.actients
                 - 将actient_node.level 的下限设置为cur_node.level + 1
                 即：max(actient_node.level, cur_node.level+1)
-                - 将 actient_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
                 - 如果actient_node未被探索过，则添加到calc_queue中
             3. 遍历cur_node.posterities
                 - 将 posterity_node.level 的上限设置为cur_node.level - 1
                 即：min(posterity_node.level, cur_node.level-1)
-                - 将 posterity_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
                 - 如果 posterity_node 未被探索过，则添加到calc_queue中
             当calc_queue为空的时候，重复a，直到b
             
@@ -128,4 +127,39 @@ class Graph:
             node.status = 'unexplored'
         self.calc_queue = deque()
         self.cur_group = 0
+    
+    def explore(self):
+        """探索所有节点，设置信息"""
+        nodes, calc_queue, cur_group = self.nodes, self.calc_queue, self.cur_group
+        
+        # 外层循环，遍历nodes
+        for node in nodes:
+            # 探索过的节点直接略过
+            if node.status == 'explored':
+                continue
+            
+            # 未探索过的节点压入计算队列
+            cur_group += 1
+            calc_queue.append(node)
+            
+            # 依次弹出node直到没有为止
+            while len(calc_queue):
+                cur_node = calc_queue.popleft()
+                # 设置信息
+                cur_node.group = cur_group
+                cur_node.status = 'explored'
+                # 处理 actients
+                for actient in cur_node.actients:
+                    actient.level = max(actient.level, cur_node.level + 1)
+                    if actient.status == 'unexplored':
+                        calc_queue.append(actient)
+                # 处理 posterities
+                for posterity in cur_node.posteriors:
+                    posterity.level = min(posterity.level, cur_node.level - 1)
+                    if posterity.status == 'unexplored':
+                        calc_queue.append(posterity)
+                        
+        # 记录信息
+        self.nodes, self.calc_queue, self.cur_group = nodes, calc_queue, cur_group
+                
             
