@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 10:56
+@edit time: 2020-04-17 11:13
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -24,19 +24,23 @@ class PDFNode:
         """
         if title in cls.instances:
             obj = cls.instances[title]
-            logging.info({actient.title for actient in obj.actients}, set(refs))
-            if {actient.title for actient in obj.actients} == set(refs) or refs is None:
+            
+            logging.info('get', title, obj.actients)
+            logging.info({actient.title for actient in obj.actients}, set(refs) if refs is not None else set())
+            
+            if refs is None or {actient.title for actient in obj.actients} == set(refs):
                 return obj
             else:
                 raise TypeError("Can't instantiate PDFNode with same title but different refs")
         else:
             obj = object.__new__(cls)
             cls.instances[title] = obj
+            obj.title = title
+            obj.parents, obj.children = set(), set()
+            obj.actients = [PDFNode(ref) for ref in refs] if refs is not None else []
+            for node in obj.actients:
+                node.children.add(obj)
+            
+            logging.info('create', title, obj.actients)
+            
             return obj
-
-    def __init__(self, title, refs=[]):
-        logging.info(f'init node with title {title}, instance_flag is {title in self.instances}')
-        self.title = title
-        self.parents = []
-        if not hasattr(self, 'actients'):
-            self.actients = [PDFNode(ref) for ref in refs]
