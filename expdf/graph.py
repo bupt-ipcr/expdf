@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 11:17
+@edit time: 2020-04-17 11:26
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -47,3 +47,11 @@ class PDFNode:
             logging.info('create', title, obj.actients)
             
             return obj
+
+    @classmethod
+    def get_nodes(cls):
+        return list(cls.instances.values())
+    
+    @classmethod
+    def clear_nodes(cls):
+        cls.instances.clear()
