@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 20:21
+@edit time: 2020-04-17 10:46
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -120,7 +120,7 @@ def process_text(text):
     links.extend(Link(url, 'url', url) for url in get_urls(text))
     links.extend(Link(arxiv, 'arxiv', f'http://arxiv.org/abs/{arxiv}') for arxiv in get_arxivs(text))
     # TODO: 增加DOI的link信息
-    links.extend(Link(doi, 'doi') for doi in get_dois(text))
+    links.extend(Link(doi, 'doi', doi) for doi in get_dois(text))
 
     # 处理refs
     refs = []
