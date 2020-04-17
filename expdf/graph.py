@@ -3,13 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 20:03
+@edit time: 2020-04-17 20:08
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
-from collections import namedtuple
-from .parser import ExPDFParser
+from collections import deque
 import logging
+from .parser import ExPDFParser
 
 class PDFNode:
     instances = {}
@@ -118,4 +118,14 @@ class Graph:
                 
     """
     
-    
+    def __init__(self):
+        self.nodes = PDFNode.get_nodes()
+        
+    def initialize(self):
+        """初始化信息"""
+        for node in self.nodes:
+            node.level = 0
+            node.status = 'unexplored'
+        self.calc_queue = deque()
+        self.cur_group = 0
+            
