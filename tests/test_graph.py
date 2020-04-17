@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 23:20
+@edit time: 2020-04-17 10:59
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -14,7 +14,15 @@ def test_newnode():
     """测试node的new方法"""
     n0 = PDFNode('title0', refs=['ta', 'tb'])
     
-    # 创建和n0同名对象时，覆盖refs会报错
+    
+    # 创建和n0同名对象时，使用相同ref应该不报错
+    has_except = False
+    try:
+        n0 = PDFNode('title0', refs=['ta', 'tb'])
+    except Exception as e:
+        has_except = True
+    assert has_except == False, "Unexpected error in creating PDFNode instance"
+    
     has_except = False
     try:
         n0copy = PDFNode('title0', [])
