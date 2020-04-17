@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 11:33
+@edit time: 2020-04-17 20:01
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -55,3 +55,67 @@ class PDFNode:
     @classmethod
     def clear_nodes(cls):
         cls.instances.clear()
+        
+        
+def calc_graph():
+    """计算所有PDFNode之间的图关系
+    
+    nodes是所有PDFNode实例的集合
+    判断层级关系
+    - 初始化
+        为所有node初始化级别 level=0
+        为所有node设置状态 status='unexplored'
+        初始化队列 calc_queue=deque()
+        初始化组别 cur_group=0
+        获取所有节点 nodes
+        
+    - 遍历nodes
+        从nodes中pop一个 status=='unexplored' 的节点。若节点 status!='unexplored'，
+        略过这个节点，pop下一个节点，直到：
+        a. 找到一个满足要求的节点
+            cur_group += 1， 将这个node推入calc_queue
+            开始遍历calc_queue，依次弹出cur_node
+            
+            1. 将 status 设置为 'explored'
+            2. 遍历cur_node.actients
+                - 将actient_node.level 的下限设置为cur_node.level + 1
+                即：max(actient_node.level, cur_node.level+1)
+                - 将 actient_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
+                - 如果actient_node未被探索过，则添加到calc_queue中
+            3. 遍历cur_node.posterity
+                - 将 posterity_node.level 的上限设置为cur_node.level - 1
+                即：min(posterity_node.level, cur_node.level-1)
+                - 将 posterity_node.group 设置为 cur_group (cur_group 应当和 cur_node.group 一致)
+                - 如果 posterity_node 未被探索过，则添加到calc_queue中
+            当calc_queue为空的时候，重复a，直到b
+            
+        b. 已经结束对nodes的遍历
+        
+    - 重整nodes
+        按照group聚合nodes
+        对于每个group：
+        1. 查找group中最大的level，设为基准
+            以基准为0重整group_nodes中所有node的level
+        2. 按照level遍历节点
+            设当前level的节点为 cur_level_nodes，下一level的节点为 next_level_nodes
+            a. 若 next_level_nodes 存在
+                对于每个 cur_level_node， 检查所有 next_level_node，
+                若某个下一级的node恰好在posterity中，则为他们建立父子关系
+                即：若 next_level_node in cur_level_node.posterity
+                    cur_level_node.children.add(next_level_node)
+                    next_level_node.parents.add(cur_level_node)
+            b. 若next_level_nodes 不存在，则结束遍历（此时level应该是min_level）
+            
+    - 返回结果
+        遍历所有group，得到如下格式：
+        返回结构如下：
+            [{group1}, {group2}, ..., {groupn}]
+        对于每个group，都是json对象，结构如下：
+            {"level0": [{n0i}, .. ], "level1": [{n1i}, .. ], ... "levelm": [{nmi}, ..]}
+            即每个level作为key，对应一个list形式的node
+        每个node都是一个json对象，包括如下内容：
+            {"title": xx, "children_title": [xx, xx, ... xx], "parents_title": [xx, xx, ... xx], "local_file": true}
+                
+    """
+        
+    
