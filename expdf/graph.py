@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 22:04
+@edit time: 2020-04-18 20:05
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -144,6 +144,7 @@ class Graph:
         self.initialize()
         self.explore()
         self.reorganize()
+        self.reformat()
 
     def initialize(self):
         """初始化信息"""
@@ -234,4 +235,41 @@ class Graph:
             groups[gid] = levels
 
         # 确保信息被保存
-        self.groups = groups 
+        self.groups = groups
+
+    def reformat(self):
+        """重新结构化，产生需要的格式
+        返回结构如下：
+            [{group1}, {group2}, ..., {groupn}]
+        对于每个group，都是json对象，结构如下：
+            {"level0": [{n0i}, .. ], "level1": [{n1i}, .. ], ... "levelm": [{nmi}, ..]}
+            即每个level作为key，对应一个list形式的node
+        每个node都是一个json对象，包括如下内容：
+            {"title": xx, "children_titles": [xx, xx, ... xx], "parents_titles": [xx, xx, ... xx], "local_file": true}
+        """
+        infos = []
+        for gid, group in self.groups.items():
+            level, info = 0, {}
+            while group[level]:
+                cur_nodes = group[level]
+                nodes = [
+                    {
+                        "title": node.title, 
+                        "local_file": node.local_file,
+                        "children_titles": [child.title for child in node.children],
+                        "parents_titles": [parent.title for parent in node.parents]
+                    }
+                    for node in cur_nodes]
+                # 记录
+                info[level] = nodes
+                info["min_level"] = level
+                # 每次降低一级level
+                level -= 1
+                
+            # 记录
+            infos.append(info)
+        
+        # 记录
+        self.infos = infos
+                
+                
