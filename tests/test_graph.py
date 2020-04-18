@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 21:24
+@edit time: 2020-04-18 20:14
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -93,4 +93,13 @@ class TestLocalPDFNode:
         assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
         assert PDFNode.get_nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
         
+class TestGraph:
+    """测试graph计算"""
+    @classmethod
+    def setup_class(cls):
+        PDFNode.clear_nodes()
+        
+    @classmethod
+    def teardown_class(cls):
+        PDFNode.clear_nodes()
         
