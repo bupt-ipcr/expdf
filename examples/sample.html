@@ -1,0 +1,151 @@
+
+<html>
+  <head>   
+    <style type="text/css">
+    circle{
+      fill: white;
+      stroke: black;
+      stroke-width: 1;
+    }
+    line{
+      stroke: black;
+      stroke-width: 1px;
+    }
+    text{
+      display: none;
+    }
+    .node:hover circle{
+      fill: white;
+      stroke-width: 2px;
+    }
+    .bold{
+      stroke: black;
+      stroke-width: 2px;
+    }
+    .slim{
+      stroke: black;
+      stroke-width: 1px;
+    }
+    .node:hover text{
+      fill: black;
+      color: black;
+      display: block;
+    }
+    .local{
+      stroke: orange;
+    }
+    .nonlocal{
+      stroke: black;
+    }
+    </style>
+    <script language='JavaScript'>
+    var selectedLines = [];
+    function boldenLines(e){
+      title = e.srcElement.getAttribute('title')
+      var lines = document.getElementsByTagName('line'); 
+      var line; 
+      for (var i = 0; i < lines.length; i++) { 
+        line = lines[i];
+        if(line.getAttribute('start') == title || line.getAttribute('end') == title){
+          line.setAttribute("class", 'bold');
+          selectedLines.push(line);
+        }
+      }
+    }
+    function slimLines(e){
+      for (var i = 0; i < selectedLines.length; i++) { 
+        line = selectedLines[i];
+        line.setAttribute("class", 'slim');
+      }
+      selectedLines = [];
+    }
+    function addMouseEvent() {
+      var circles = document.getElementsByTagName('circle'); 
+      var circle; 
+      for (var i = 0; i < circles.length; i++) { 
+        circle = circles[i]; 
+          circle.addEventListener('mouseover', boldenLines, true) 
+          circle.addEventListener('mouseout', slimLines, true) 
+      } 
+    }
+    window.addEventListener('load', addMouseEvent, true);
+    </script>
+  </head>
+  <body>
+    <div style="margin:100px">
+    <svg width="100%" height="360px" pointer-events="all" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    
+    <g transform="translate(120, 0)">
+        <g>
+    <line class="link" x1="60.0" y1="90" x2="480.0" y2="180" start="Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="180.0" y1="90" x2="480.0" y2="180" start="Resource Man-agement with Deep Reinforcement Learning" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="300.0" y1="90" x2="480.0" y2="180" start="A uniﬁed graph labelingalgorithm for consecutive-block channel allocation in SC-FDMA, IEEETrans. Wireless Commun., vol. 12, no. 11, pp. 5767-5779, Nov. 2013[6] V. Sze, Y. Chen, T. Yang, and J. Emer, “Efﬁcient processing of deepneural networks: A tutorial and survey" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="420.0" y1="90" x2="480.0" y2="180" start="Joint Caching, Routing,and Channel Assignment for Collaborative Small-Cell Cellular Net-works" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="540.0" y1="90" x2="480.0" y2="180" start="Wirelesscaching: technical misconceptions and business barriers" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="660.0" y1="90" x2="480.0" y2="180" start="Optimal cell clustering andactivation for energy saving in load-coupled wireless networks" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="780.0" y1="90" x2="480.0" y2="180" start="Edge Caching atBase Stations with Device-to-Device Ofﬂoading" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>      
+<line class="link" x1="900.0" y1="90" x2="480.0" y2="180" start="On the Complexity of Optimal ContentPlacement in Hierarchical Caching Networks" end="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></line>
+    </g>    
+<g>
+    
+      <g class="node" transform="translate(60.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks</text>
+      </g>
+          
+
+      <g class="node" transform="translate(180.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Resource Man-agement with Deep Reinforcement Learning"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Resource Man-agement with Deep Reinforcement Learning</text>
+      </g>
+          
+
+      <g class="node" transform="translate(300.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="A uniﬁed graph labelingalgorithm for consecutive-block channel allocation in SC-FDMA, IEEETrans. Wireless Commun., vol. 12, no. 11, pp. 5767-5779, Nov. 2013[6] V. Sze, Y. Chen, T. Yang, and J. Emer, “Efﬁcient processing of deepneural networks: A tutorial and survey"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">A uniﬁed graph labelingalgorithm for consecutive-block channel allocation in SC-FDMA, IEEETrans. Wireless Commun., vol. 12, no. 11, pp. 5767-5779, Nov. 2013[6] V. Sze, Y. Chen, T. Yang, and J. Emer, “Efﬁcient processing of deepneural networks: A tutorial and survey</text>
+      </g>
+          
+
+      <g class="node" transform="translate(420.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Joint Caching, Routing,and Channel Assignment for Collaborative Small-Cell Cellular Net-works"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Joint Caching, Routing,and Channel Assignment for Collaborative Small-Cell Cellular Net-works</text>
+      </g>
+          
+
+      <g class="node" transform="translate(540.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Wirelesscaching: technical misconceptions and business barriers"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Wirelesscaching: technical misconceptions and business barriers</text>
+      </g>
+          
+
+      <g class="node" transform="translate(660.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Optimal cell clustering andactivation for energy saving in load-coupled wireless networks"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Optimal cell clustering andactivation for energy saving in load-coupled wireless networks</text>
+      </g>
+          
+
+      <g class="node" transform="translate(780.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="Edge Caching atBase Stations with Device-to-Device Ofﬂoading"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">Edge Caching atBase Stations with Device-to-Device Ofﬂoading</text>
+      </g>
+          
+
+      <g class="node" transform="translate(900.0, 90)" style="fill: white;">
+        <circle class="nonlocal" r="30" title="On the Complexity of Optimal ContentPlacement in Hierarchical Caching Networks"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">On the Complexity of Optimal ContentPlacement in Hierarchical Caching Networks</text>
+      </g>
+          
+
+      <g class="node" transform="translate(480.0, 180)" style="fill: white;">
+        <circle class="local" r="30" title="A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet"></circle>
+        <text class="nodeLabel" transform="translate(-30.0, -45.0)">A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet</text>
+      </g>
+    
+    </g>
+    </g>
+    
+    </svg>
+    
+    </div>
+  </body>
+</html>
