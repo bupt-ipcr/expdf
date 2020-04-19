@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-18 20:18
+@edit time: 2020-04-19 16:03
 @FilePath: /tests/test_graph.py
 @desc: 
 """
@@ -114,21 +114,23 @@ class TestGraph:
         infos = graph.infos
 
         assert infos == [{
-            0: [{'children_titles': ['title2', 'title1'],
-                 'local_file': False,
-                 'parents_titles': [],
-                 'title': 'title3'}],
-            - 1: [{'children_titles': ['title0'],
-                   'local_file': True,
-                   'parents_titles': ['title3'],
-                   'title': 'title2'},
-                  {'children_titles': ['title0'],
-                   'local_file': True,
-                   'parents_titles': ['title3'],
-                   'title': 'title1'}],
-            - 2: [{'children_titles': [],
-                   'local_file': True,
-                   'parents_titles': ['title2', 'title1'],
-                   'title': 'title0'}],
+            'levels': {
+                0: [{'children_titles': ['title2', 'title1'],
+                     'local_file': False,
+                     'parents_titles': [],
+                     'title': 'title3'}],
+                - 1: [{'children_titles': ['title0'],
+                       'local_file': True,
+                       'parents_titles': ['title3'],
+                       'title': 'title2'},
+                      {'children_titles': ['title0'],
+                       'local_file': True,
+                       'parents_titles': ['title3'],
+                       'title': 'title1'}],
+                - 2: [{'children_titles': [],
+                       'local_file': True,
+                       'parents_titles': ['title2', 'title1'],
+                       'title': 'title0'}]
+            },
             "min_level": -2
         }]
