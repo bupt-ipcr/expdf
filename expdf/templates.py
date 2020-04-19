@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:08
-@FilePath: /expdf/templates.py
+@edit time: 2020-04-19 16:20
+@FilePath: /caoxiaojing/expdf/expdf/templates.py
 @desc: templates
 """
 svg_template = '''
@@ -15,19 +15,32 @@ svg_template = '''
       fill: white;
       stroke: black;
       stroke-width: 1;
-    },
+    }
     line{
       stroke: black;
       stroke-width: 1px;
     }
-    .assemble:hover circle{
+    text{
+      display: none;
+    }
+    .node:hover circle{
       fill: white;
+      stroke-width: 2px;
+    }
+    .node:hover line{
       stroke: black;
       stroke-width: 2px;
     }
-    .assemble:hover line{
+    .node:hover text{
+      fill: black;
+      color: black;
+      display: block;
+    }
+    .local{
+      stroke: orange;
+    }
+    .nonlocal{
       stroke: black;
-      stroke-width: 2px;
     }
     </style>
   </head>
