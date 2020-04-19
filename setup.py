@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 2019-11-25 11:08
-@edit time: 2020-04-15 17:26
+@edit time: 2020-04-19 17:00
 @FilePath: /setup.py
 """
 
@@ -28,7 +28,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'pdfminer3k'
+    'requests', 'pdfminer2'
 ]
 
 # What packages are optional?
