@@ -3,14 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:01
-@FilePath: /expdf/graph.py
+@edit time: 2020-04-19 16:14
+@FilePath: /caoxiaojing/expdf/expdf/graph.py
 @desc: 制作PDF图结构
 """
 from collections import deque, defaultdict
 from functools import reduce
 import logging
-from .parser import ExPDFParser
 
 
 class PDFNode:
