@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:05
+@edit time: 2020-04-19 16:06
 @FilePath: /expdf/visualize.py
 @desc: 可视化PDF关系
 """
@@ -130,8 +130,7 @@ def gererate_svg(data):
     with open('templates/svg_template.html', 'r') as f:
         html = f.read()
     html = html.replace('SVG_CONTENT', svg_html)
-    with open('svg.html', 'w') as f:
-        f.write(html)
+    return html
 
 
 def render(infos):
