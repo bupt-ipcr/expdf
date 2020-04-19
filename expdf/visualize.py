@@ -3,11 +3,11 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:06
+@edit time: 2020-04-19 16:09
 @FilePath: /expdf/visualize.py
 @desc: 可视化PDF关系
 """
-
+from .templates import svg_template
 R = 30   # 圆的半径
 W = 4 * R  # 圆的间距
 H = 3 * R    # 行间距
@@ -127,8 +127,7 @@ def gererate_svg(data):
         max_height = max(max_height, group['height'])
         group_htmls.append(group_html)
     svg_html = create_svg_html(group_htmls, max_height)
-    with open('templates/svg_template.html', 'r') as f:
-        html = f.read()
+    html = svg_template
     html = html.replace('SVG_CONTENT', svg_html)
     return html
 
