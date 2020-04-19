@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:22
+@edit time: 2020-04-19 16:38
 @FilePath: /caoxiaojing/expdf/expdf/visualize.py
 @desc: 可视化PDF关系
 """
@@ -82,12 +82,12 @@ def create_circles_html(circles):
     </g>'''
     circle_template = '''
       <g class="node" transform="translate({}, {})" style="fill: white;">
-        <circle class="{}" r="{}"></circle>
+        <circle class="{}" r="{}" title="{}"></circle>
         <text class="nodeLabel" transform="translate({}, {})">{}</text>
       </g>
     '''
     circle_htmls = (circle_template.format(
-        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R, -W/4, -H/2, circle['title']) for circle in circles)
+        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R, circle['title'], -W/4, -H/2, circle['title']) for circle in circles)
     join_html = '      \r\n'.join(circle_htmls)
     circles_html = circles_template.format(join_html)
     return circles_html
