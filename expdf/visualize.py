@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:38
-@FilePath: /caoxiaojing/expdf/expdf/visualize.py
+@edit time: 2020-04-19 16:57
+@FilePath: /expdf/visualize.py
 @desc: 可视化PDF关系
 """
 from .templates import svg_template
@@ -133,6 +133,8 @@ def gererate_svg(data):
     return html
 
 
-def render(infos):
+def render(infos, filename):
     """接口"""
-    return gererate_svg(infos_to_data(infos))
+    html = gererate_svg(infos_to_data(infos))
+    with open(filename, 'w') as f:
+        f.write(html)
