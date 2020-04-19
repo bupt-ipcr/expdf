@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:09
-@FilePath: /expdf/visualize.py
+@edit time: 2020-04-19 16:22
+@FilePath: /caoxiaojing/expdf/expdf/visualize.py
 @desc: 可视化PDF关系
 """
 from .templates import svg_template
@@ -68,8 +68,9 @@ def create_lines_html(lines):
     lines_template = '''<g>
     {}
     </g>'''
-    line_template = '''<line class="link" x1="{}" y1="{}" x2="{}" y2="{}"></line>'''
-    line_htmls = (line_template.format(l['x1'] * W, l['y1'] * H, l['x2'] * W, l['y2'] * H) for l in lines)
+    line_template = '''<line class="link" x1="{}" y1="{}" x2="{}" y2="{}" start="{}" end="{}"></line>'''
+    line_htmls = (line_template.format(l['x1'] * W, l['y1'] * H, l['x2']
+                                       * W, l['y2'] * H, l['start'], l['end']) for l in lines)
     join_html = '      \r\n'.join(line_htmls)
     lines_html = lines_template.format(join_html)
     return lines_html
@@ -86,7 +87,7 @@ def create_circles_html(circles):
       </g>
     '''
     circle_htmls = (circle_template.format(
-        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R, 0, -H/2, circle['title']) for circle in circles)
+        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R, -W/4, -H/2, circle['title']) for circle in circles)
     join_html = '      \r\n'.join(circle_htmls)
     circles_html = circles_template.format(join_html)
     return circles_html
