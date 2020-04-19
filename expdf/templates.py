@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# coding=utf-8
+"""
+@author: Jiawei Wu
+@create time: 1970-01-01 08:00
+@edit time: 2020-04-19 16:08
+@FilePath: /expdf/templates.py
+@desc: templates
+"""
+svg_template = '''
 <html>
   <head>   
     <style type="text/css">
@@ -27,3 +37,6 @@
     </div>
   </body>
 </html>
+'''
+
+
