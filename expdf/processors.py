@@ -3,11 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-17 10:46
+@edit time: 2020-04-24 20:34
 @FilePath: /expdf/processors.py
 @desc: 
 """
 from io import BytesIO
+from pdfminer import settings as pdfminer_settings
+pdfminer_settings.STRICT = False
 from pdfminer.layout import LAParams
 from pdfminer.converter import TextConverter
 from pdfminer.pdfdocument import PDFDocument
@@ -15,14 +17,12 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdftypes import resolve1
 from pdfminer import psparser
-from pdfminer import settings as pdfminer_settings
 import re
 from .utils import Link
 from .utils import flatten, resolve_PDFObjRef
 from .utils import get_urls, get_arxivs, get_dois
 from .xmp import xmp_to_dict
 
-pdfminer_settings.STRICT = False
 
 
 def process_doc(doc: PDFDocument):
