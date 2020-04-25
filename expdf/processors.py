@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-24 20:34
+@edit time: 2020-04-25 17:46
 @FilePath: /expdf/processors.py
 @desc: 
 """
@@ -18,6 +18,7 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdftypes import resolve1
 from pdfminer import psparser
 import re
+from .extractor import get_ref_title
 from .utils import Link
 from .utils import flatten, resolve_PDFObjRef
 from .utils import get_urls, get_arxivs, get_dois
@@ -125,16 +126,32 @@ def process_text(text):
     # 处理refs
     refs = []
     lines = text.split('\n')
-    # 找到REFERENCES位置
-    ref_text = text[text.find('REFERENCES'):]
-    # 将\n替换掉，以便re搜索
-    ref_text = ref_text.replace('\n', '')
-    # 查找[n]开头且包含 “” 的文本
-    ref_lines = re.findall(r'(?<=\[\d\]).*?“.+?”', ref_text)
+    
+    # 通过引用前的 "References" 标题查找引用范围的文本
+    # 当在文中搜索到包含 "References"(不区分大小写) 字样时，将文本从 's' 开始截断，防止被重复搜索
+    # 如果紧接着能看到[1]这样的引用计数，说明找对了
+    # 否则接着查找，直到文本中找不到 "References" 为止
+    ref_text = text
+    while True:
+        re_ref = re.search(r'REFERENCES', ref_text, re.I)
+        if not re_ref:
+            break
+        ref_start = re_ref.span()[1]
+        ref_text = ref_text[ref_start:]
+        if '[' in ref_text[ref_start: ref_start + 5]:
+            break
+
+    # 匹配所有引用文章的具体标题
+    # 将References标志之后的文本，按照 [\d+] 为分隔符分开，每行都是一条ref
+    # 使用各种论文引用格式匹配ref标题，匹配不到的暂时使用ref全文作为标题
+    
+    ref_text = ref_text.replace('\n', '')   # 将\n替换掉，以便re搜索
+    ref_lines = re.split(r'\[\d+\]', ref_text)  # 用[\d+]分割
     for ref_line in ref_lines:
-        # 匹配“”中的文本，因为之前匹配过一次，所以一定能search到结果，不需要判断
-        ref = re.search(r'(?<=“).+?(?=”)', ref_line)[0]
-        # 删除首末的标点
-        ref = re.sub('[,，.。]$', '', ref)
+        if not ref_line:
+            continue
+    
+        ref_text = ref_line.strip() # 删除文本前后的空白字符
+        ref = get_ref_title(ref_text)   # 获取引用文章的标题
         refs.append(ref)
     return links, refs
