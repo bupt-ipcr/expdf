@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:56
-@FilePath: /text.py
+@edit time: 2020-04-27 21:03
+@FilePath: /examples/sample.py
 @desc: 
 """
 from expdf.graph import PDFNode, LocalPDFNode, Graph
@@ -17,4 +17,3 @@ localPDFNode = LocalPDFNode(expdf_parser.title, expdf_parser.refs)
 graph = Graph()
 graph.calculate()
 render(graph.infos, 'svg.html')
-
