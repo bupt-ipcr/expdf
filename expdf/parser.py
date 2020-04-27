@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-16 22:32
+@edit time: 2020-04-25 22:13
 @FilePath: /expdf/parser.py
 @desc: 
 """
@@ -19,7 +19,7 @@ import re
 import requests
 from .processors import *
 from .utils import Link
-from .utils import get_urls, get_arxivs, get_dois
+from .extractor import get_urls, get_arxivs, get_dois
 
 pdfminer_settings.STRICT = False
 
