@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:14
-@FilePath: /caoxiaojing/expdf/expdf/graph.py
+@edit time: 2020-04-28 12:00
+@FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
 from collections import deque, defaultdict
@@ -255,8 +255,8 @@ class Graph:
                     {
                         "title": node.title, 
                         "local_file": node.local_file,
-                        "children_titles": [child.title for child in node.children],
-                        "parents_titles": [parent.title for parent in node.parents]
+                        "children_titles": {child.title for child in node.children},
+                        "parents_titles": {parent.title for parent in node.parents}
                     }
                     for node in cur_nodes]
                 # 记录
