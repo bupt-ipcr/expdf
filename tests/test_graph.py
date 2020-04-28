@@ -3,9 +3,9 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:11
+@edit time: 2020-04-28 12:12
 @FilePath: /tests/test_graph.py
-@desc: 测试Graph模块是否正常工作 
+@desc: 测试Graph模块是否正常工作
 """
 
 from expdf.graph import PDFNode, LocalPDFNode, Graph
@@ -84,7 +84,7 @@ class TestLocalPDFNode:
 
         has_except = False
         try:
-            n0copy = LocalPDFNode('title0', refs=['ta', 'tc'])
+            LocalPDFNode('title0', refs=['ta', 'tc'])
         except Exception:
             has_except = True
 
