@@ -3,9 +3,9 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:01
+@edit time: 2020-04-28 12:10
 @FilePath: /tests/test_graph.py
-@desc: 
+@desc: 测试Graph模块是否正常工作 
 """
 
 from expdf.graph import PDFNode, LocalPDFNode, Graph
@@ -28,7 +28,7 @@ class TestPDFNode:
         has_except = False
         try:
             n0 = PDFNode('title0', refs=['ta', 'tb'])
-        except Exception as e:
+        except Exception:
             has_except = True
         assert has_except == False, "Unexpected error in creating PDFNode instance"
 
@@ -45,7 +45,7 @@ class TestPDFNode:
         has_except = False
         try:
             n0copy = PDFNode('title0')
-        except Exception as e:
+        except Exception:
             has_except = True
         assert has_except == False, "Unexpected error in creating PDFNode instance"
 
@@ -85,7 +85,7 @@ class TestLocalPDFNode:
         has_except = False
         try:
             n0copy = LocalPDFNode('title0', refs=['ta', 'tc'])
-        except Exception as e:
+        except Exception:
             has_except = True
 
         assert has_except == False, "Unexpected error in override LocalPDFNode instance"
