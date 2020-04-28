@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:15
+@edit time: 2020-04-28 12:18
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -251,7 +251,7 @@ class Graph:
                 cur_nodes = group[level]
                 nodes = [
                     {
-                        "title": node.title, 
+                        "title": node.title,
                         "local_file": node.local_file,
                         "children_titles": {child.title for child in node.children},
                         "parents_titles": {parent.title for parent in node.parents}
@@ -262,12 +262,10 @@ class Graph:
                 info["min_level"] = level
                 # 每次降低一级level
                 level -= 1
-                
+
             # 记录
             info['levels'] = levels
             infos.append(info)
-        
+
         # 记录
         self.infos = infos
-                
-                
