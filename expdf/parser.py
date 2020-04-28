@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:18
+@edit time: 2020-04-28 12:19
 @FilePath: /expdf/parser.py
 @desc: 解析PDF
 """
@@ -14,7 +14,6 @@ from pdfminer.pdfdocument import PDFDocument
 import requests
 from .extractor import get_urls
 from .processors import process_doc, process_pages, process_annots, process_text
-from .utils import Link
 
 
 class ExPDFParser:
