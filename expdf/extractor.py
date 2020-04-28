@@ -3,9 +3,9 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 20:30
+@edit time: 2020-04-28 20:33
 @FilePath: /expdf/extractor.py
-@desc: 
+@desc: 匹配
 """
 from collections import namedtuple
 import re
@@ -27,7 +27,7 @@ def get_ref_title(ref_text):
     # e.g. L. Breslau, Pei Cao, Li Fan, G. Phillips, and S. Shenker. Web caching and zipf-like distributions: evidence and implications. In INFOCOM ’99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE, volume 1, pages 126–134 vol.1, Mar 1999.
     if re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text):
         return re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text).groups()[1]
-    
+
     return ref_text
 
 
