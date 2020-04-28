@@ -3,11 +3,15 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 18:09
+@edit time: 2020-04-28 20:25
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
-from expdf.extractor import get_ref_title, get_urls
+from expdf.extractor import (
+    get_ref_title,
+    get_urls,
+    get_arxivs
+)
 
 
 def test_get_ref_title():
@@ -35,3 +39,20 @@ def test_get_urls():
     # 如果没有url
     none_text = '''here is my sentence and contains no urls'''
     assert get_urls(none_text) == set()
+
+
+def test_get_arxivs():
+    # 匹配描述格式的arxiv
+    arxiv_text_1 = '''arXiv preprint arXiv:1312.5602, 2013.'''
+    assert get_arxivs(arxiv_text_1) == {'1312.5602'}
+    
+    arxiv_text_2 = ''' arXiv.org.1511.0658'''
+    assert get_arxivs(arxiv_text_2) == {'1511.0658'}
+    
+    arxiv_text_v1 = '''X. Zhang and L. Duan, “Optimal deployment of UAV net- works for delivering emergency wireless coverage,” 2017, arXIV:1710.05616v1.'''
+    assert get_arxivs(arxiv_text_v1) == {'1710.055616v1'}
+    
+    # 匹配链接格式的arxiv
+    arxiv_url = '''.. link is https://arxiv.org/abs/1812.02979 '''
+    assert get_arxivs(arxiv_url) == {'1812.02979'}
+    
