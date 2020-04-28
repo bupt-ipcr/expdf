@@ -3,12 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-27 21:04
+@edit time: 2020-04-28 12:05
 @FilePath: /expdf/extractor.py
 @desc: 
 """
+from collections import namedtuple
 import re
-from .utils import Link
+Link = namedtuple('Link', 'uri, reftype link')
 
 
 def get_ref_title(ref_text):
