@@ -3,13 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:51
-@FilePath: /caoxiaojing/expdf/expdf/templates.py
+@edit time: 2020-04-28 12:14
+@FilePath: /expdf/templates.py
 @desc: templates
 """
 svg_template = '''
 <html>
-  <head>   
+  <head>
     <style type="text/css">
     circle{
       fill: white;
@@ -51,9 +51,9 @@ svg_template = '''
     var selectedLines = [];
     function boldenLines(e){
       title = e.srcElement.getAttribute('title')
-      var lines = document.getElementsByTagName('line'); 
-      var line; 
-      for (var i = 0; i < lines.length; i++) { 
+      var lines = document.getElementsByTagName('line');
+      var line;
+      for (var i = 0; i < lines.length; i++) {
         line = lines[i];
         if(line.getAttribute('start') == title || line.getAttribute('end') == title){
           line.setAttribute("class", 'bold');
@@ -62,20 +62,20 @@ svg_template = '''
       }
     }
     function slimLines(e){
-      for (var i = 0; i < selectedLines.length; i++) { 
+      for (var i = 0; i < selectedLines.length; i++) {
         line = selectedLines[i];
         line.setAttribute("class", 'slim');
       }
       selectedLines = [];
     }
     function addMouseEvent() {
-      var circles = document.getElementsByTagName('circle'); 
-      var circle; 
-      for (var i = 0; i < circles.length; i++) { 
-        circle = circles[i]; 
-          circle.addEventListener('mouseover', boldenLines, true) 
-          circle.addEventListener('mouseout', slimLines, true) 
-      } 
+      var circles = document.getElementsByTagName('circle');
+      var circle;
+      for (var i = 0; i < circles.length; i++) {
+        circle = circles[i];
+          circle.addEventListener('mouseover', boldenLines, true)
+          circle.addEventListener('mouseout', slimLines, true)
+      }
     }
     window.addEventListener('load', addMouseEvent, true);
     </script>
