@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:17
+@edit time: 2020-04-28 12:18
 @FilePath: /expdf/parser.py
 @desc: 解析PDF
 """
@@ -19,23 +19,23 @@ from .utils import Link
 
 class ExPDFParser:
     """解析后的PDF对象
-    
+
     Params:
     - uri: resource uri, local file location or url
     - local: default False, set True to force use local file
-    
+
     Attributes:
     - title
     - links
     - refs
     - info
     - metadata
-    
+
     Usage:
     >>> expdf_parser = ExPDFParser("tests/test.pdf")
     >>> expdf_parser.title
     'A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet'
-    
+
     """
 
     def __init__(self, uri, local=False):
@@ -62,19 +62,19 @@ class ExPDFParser:
                 return metadata['dc']['title']['x-default']
         # 如果找不到title，则抛出异常
         raise AttributeError("has no attribute 'title'")
-    
+
     @property
     def links(self):
         return self._data['links']
-    
+
     @property
     def refs(self):
         return self._data['refs']
-    
+
     @property
     def info(self):
         return self._data['info']
-    
+
     @property
     def metadata(self):
         return self._data['metadata']
@@ -146,4 +146,3 @@ def ex_parser(pdf_stream, password='', pagenos=[], maxpages=0):
         'refs': refs
     }
     return pdf_dict
-
