@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:05
+@edit time: 2020-04-28 17:21
 @FilePath: /expdf/extractor.py
 @desc: 
 """
@@ -21,12 +21,14 @@ def get_ref_title(ref_text):
     @param: ref_text: 引用原文
     @return: ref title 引用文章的标题
     """
-    ref_title = ref_text
-
-    # e.g. `W. Jiang, G. Feng and S. Qin, “Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,” in IEEETransactions on Mobile Computing, vol. 16, no. 5, pp. 1382-1393, May2017.`
-    if re.search(r'''([^“]+),\s*“(.+)”.*(in|In|IN).''', ref_text):
-        ref_title = re.search(r'''([^“]+),\s*“(.+)”.*(in|In|IN).''', ref_text).groups()[1]
-    return ref_title
+    # e.g. W. Jiang, G. Feng and S. Qin, “Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,” in IEEETransactions on Mobile Computing, vol. 16, no. 5, pp. 1382-1393, May2017.
+    if re.search(r'''([^“]+),\s*“(.+)”.*(in|In|IN)''', ref_text):
+        return re.search(r'''([^“]+),\s*“(.+)”.*(in|In|IN)''', ref_text).groups()[1]
+    # e.g. L. Breslau, Pei Cao, Li Fan, G. Phillips, and S. Shenker. Web caching and zipf-like distributions: evidence and implications. In INFOCOM ’99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE, volume 1, pages 126–134 vol.1, Mar 1999.
+    if re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text):
+        return re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text).groups()[1]
+    
+    return ref_text
 
 
 def get_urls(text):
