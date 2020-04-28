@@ -114,9 +114,9 @@ class TestGraph:
         infos = graph.infos
 
         assert infos[0]['levels'][0] == [{'children_titles': {'title2', 'title1'},
-                                       'local_file': False,
-                                       'parents_titles': set(),
-                                       'title': 'title3'}]
+                                          'local_file': False,
+                                          'parents_titles': set(),
+                                          'title': 'title3'}]
         assert any((
             infos[0]['levels'][-1] == [{'children_titles': {'title0'},
                                         'local_file': True,
