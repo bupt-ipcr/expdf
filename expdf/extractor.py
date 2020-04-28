@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 17:21
+@edit time: 2020-04-28 20:30
 @FilePath: /expdf/extractor.py
 @desc: 
 """
@@ -46,9 +46,12 @@ def get_arxivs(text):
     @param text: 文本
     @return set, all arxivs
     """
-    ARXIV_REGEX = r"""arxiv:\s?([^\s,]+)"""
-    ARXIV_REGEX2 = r"""arxiv.org/abs/([^\s,]+)"""
-    res = re.findall(ARXIV_REGEX, text, re.IGNORECASE) + re.findall(ARXIV_REGEX2, text, re.IGNORECASE)
+    re_texts = [r"""arxiv:\s?([^\s,]+)""", r"""arXiv\.org\.\s?([^\s,]+)"""]
+    re_url = r"""arxiv.org/abs/([^\s,]+)"""
+    res = []
+    for re_text in re_texts:
+        res.extend(re.findall(re_text, text, re.I))
+    res.extend(re.findall(re_url, text, re.I))
     return set([r.strip(".") for r in res])
 
 
