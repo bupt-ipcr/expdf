@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:00
+@edit time: 2020-04-28 12:03
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -240,11 +240,11 @@ class Graph:
         """重新结构化，产生需要的格式
         返回结构如下：
             [{group1}, {group2}, ..., {groupn}]
-        对于每个group，都是json对象，结构如下：
+        对于每个group，都是dict，结构如下：
             {"level0": [{n0i}, .. ], "level1": [{n1i}, .. ], ... "levelm": [{nmi}, ..]}
             即每个level作为key，对应一个list形式的node
-        每个node都是一个json对象，包括如下内容：
-            {"title": xx, "children_titles": [xx, xx, ... xx], "parents_titles": [xx, xx, ... xx], "local_file": true}
+        每个node都是一个dict，包括如下内容：
+            {"title": xx, "children_titles": {xx, xx, ... xx}, "parents_titles": {xx, xx, ... xx}, "local_file": true}
         """
         infos = []
         for gid, group in self.groups.items():
