@@ -3,9 +3,9 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-27 21:03
+@edit time: 2020-04-28 12:08
 @FilePath: /examples/sample.py
-@desc: 
+@desc: 演示使用单个PDF文档产生引用关系图
 """
 from expdf.graph import PDFNode, LocalPDFNode, Graph
 from expdf.visualize import render
