@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:10
+@edit time: 2020-04-28 12:11
 @FilePath: /tests/test_graph.py
 @desc: 测试Graph模块是否正常工作 
 """
@@ -105,9 +105,9 @@ class TestGraph:
         PDFNode.clear_nodes()
 
     def test_graph_calc(self):
-        n0 = LocalPDFNode('title0', refs=['title1', 'title2'])
-        n1 = LocalPDFNode('title1', refs=['title3'])
-        n2 = LocalPDFNode('title2', refs=['title3'])
+        LocalPDFNode('title0', refs=['title1', 'title2'])
+        LocalPDFNode('title1', refs=['title3'])
+        LocalPDFNode('title2', refs=['title3'])
         graph = Graph()
         graph.calculate()
 
