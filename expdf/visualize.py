@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-19 16:57
+@edit time: 2020-04-28 12:19
 @FilePath: /expdf/visualize.py
 @desc: 可视化PDF关系
 """
@@ -20,7 +20,6 @@ def infos_to_data(infos):
     }
     for gid, gcontent in enumerate(infos):
         group = {}
-        circle_dict = {}
         # 获取group对应的画幅
         levels, min_level = gcontent['levels'], gcontent['min_level']
         max_nodes = max(len(nodes) for level, nodes in levels.items())
@@ -87,7 +86,8 @@ def create_circles_html(circles):
       </g>
     '''
     circle_htmls = (circle_template.format(
-        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R, circle['title'], -W/4, -H/2, circle['title']) for circle in circles)
+        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R,
+        circle['title'], -W/4, -H/2, circle['title']) for circle in circles)
     join_html = '      \r\n'.join(circle_htmls)
     circles_html = circles_template.format(join_html)
     return circles_html
