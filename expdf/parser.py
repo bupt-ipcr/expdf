@@ -3,25 +3,18 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-25 22:13
+@edit time: 2020-04-28 12:17
 @FilePath: /expdf/parser.py
 @desc: 
 """
 from io import BytesIO
-import json
 from pathlib import Path
-
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
-from pdfminer import settings as pdfminer_settings
-from pprint import pprint
-import re
 import requests
-from .processors import *
+from .extractor import get_urls
+from .processors import process_doc, process_pages, process_annots, process_text
 from .utils import Link
-from .extractor import get_urls, get_arxivs, get_dois
-
-pdfminer_settings.STRICT = False
 
 
 class ExPDFParser:
