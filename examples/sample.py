@@ -7,10 +7,9 @@
 @FilePath: /examples/sample.py
 @desc: 演示使用单个PDF文档产生引用关系图
 """
-from expdf.graph import PDFNode, LocalPDFNode, Graph
+from expdf.graph import LocalPDFNode, Graph
 from expdf.visualize import render
 from expdf.parser import ExPDFParser
-from pprint import pprint
 
 expdf_parser = ExPDFParser("tests/test.pdf")
 localPDFNode = LocalPDFNode(expdf_parser.title, expdf_parser.refs)
