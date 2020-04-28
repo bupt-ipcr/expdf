@@ -3,27 +3,25 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-25 17:46
+@edit time: 2020-04-28 12:21
 @FilePath: /expdf/processors.py
-@desc: 
+@desc: 处理器集合
 """
+from .xmp import xmp_to_dict
+from .utils import get_urls, get_arxivs, get_dois
+from .utils import flatten, resolve_PDFObjRef
+from .extractor import Link
+from .extractor import get_ref_title
+import re
+from pdfminer.pdftypes import resolve1
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
 from io import BytesIO
 from pdfminer import settings as pdfminer_settings
 pdfminer_settings.STRICT = False
-from pdfminer.layout import LAParams
-from pdfminer.converter import TextConverter
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdftypes import resolve1
-from pdfminer import psparser
-import re
-from .extractor import get_ref_title
-from .utils import Link
-from .utils import flatten, resolve_PDFObjRef
-from .utils import get_urls, get_arxivs, get_dois
-from .xmp import xmp_to_dict
-
 
 
 def process_doc(doc: PDFDocument):
@@ -34,7 +32,7 @@ def process_doc(doc: PDFDocument):
     通过读取raw xmp数据，并转换为json格式返回
 
     @param doc: PDFDocument对象
-    @return: 
+    @return:
         info: json格式的info信息，若没找到则返回{}
         metadata: json格式的metadata，若没找到则返回{}
     """
@@ -126,7 +124,7 @@ def process_text(text):
     # 处理refs
     refs = []
     lines = text.split('\n')
-    
+
     # 通过引用前的 "References" 标题查找引用范围的文本
     # 当在文中搜索到包含 "References"(不区分大小写) 字样时，将文本从 's' 开始截断，防止被重复搜索
     # 如果紧接着能看到[1]这样的引用计数，说明找对了
@@ -144,14 +142,14 @@ def process_text(text):
     # 匹配所有引用文章的具体标题
     # 将References标志之后的文本，按照 [\d+] 为分隔符分开，每行都是一条ref
     # 使用各种论文引用格式匹配ref标题，匹配不到的暂时使用ref全文作为标题
-    
+
     ref_text = ref_text.replace('\n', '')   # 将\n替换掉，以便re搜索
     ref_lines = re.split(r'\[\d+\]', ref_text)  # 用[\d+]分割
     for ref_line in ref_lines:
         if not ref_line:
             continue
-    
-        ref_text = ref_line.strip() # 删除文本前后的空白字符
+
+        ref_text = ref_line.strip()  # 删除文本前后的空白字符
         ref = get_ref_title(ref_text)   # 获取引用文章的标题
         refs.append(ref)
     return links, refs
