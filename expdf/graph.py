@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:03
+@edit time: 2020-04-28 12:15
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
@@ -208,8 +208,6 @@ class Graph:
             for node in nodes:
                 node.level = node.level - max_level
                 levels[node.level].append(node)
-            # 获取重整后的最小level
-            min_level = reduce(min, (node.level for node in nodes))
 
             # 从0开始向下遍历level，获取当前层的level
             level = 0
