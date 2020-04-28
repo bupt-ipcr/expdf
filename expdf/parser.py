@@ -5,7 +5,7 @@
 @create time: 1970-01-01 08:00
 @edit time: 2020-04-28 12:17
 @FilePath: /expdf/parser.py
-@desc: 
+@desc: 解析PDF
 """
 from io import BytesIO
 from pathlib import Path
