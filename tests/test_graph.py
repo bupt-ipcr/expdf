@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:12
+@edit time: 2020-04-28 12:13
 @FilePath: /tests/test_graph.py
 @desc: 测试Graph模块是否正常工作
 """
@@ -30,7 +30,7 @@ class TestPDFNode:
             n0 = PDFNode('title0', refs=['ta', 'tb'])
         except Exception:
             has_except = True
-        assert has_except == False, "Unexpected error in creating PDFNode instance"
+        assert not has_except, "Unexpected error in creating PDFNode instance"
 
         # 使用不同ref应该会报错
         has_except = False
@@ -39,7 +39,7 @@ class TestPDFNode:
         except Exception as e:
             assert str(e) == "Can't instantiate PDFNode with same title but different refs"
             has_except = True
-        assert has_except == True, "Create two instance of PDFNode with different refs has no error"
+        assert has_except, "Create two instance of PDFNode with different refs has no error"
 
         # 不指明refs则不会报错
         has_except = False
@@ -47,7 +47,7 @@ class TestPDFNode:
             n0copy = PDFNode('title0')
         except Exception:
             has_except = True
-        assert has_except == False, "Unexpected error in creating PDFNode instance"
+        assert not has_except, "Unexpected error in creating PDFNode instance"
 
         # n0 和 n0copy 应该是一个对象
         assert n0 is n0copy
@@ -88,7 +88,7 @@ class TestLocalPDFNode:
         except Exception:
             has_except = True
 
-        assert has_except == False, "Unexpected error in override LocalPDFNode instance"
+        assert not has_except, "Unexpected error in override LocalPDFNode instance"
 
         assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
         assert PDFNode.get_nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
