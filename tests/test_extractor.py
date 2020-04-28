@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 20:25
+@edit time: 2020-04-28 20:30
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -50,7 +50,7 @@ def test_get_arxivs():
     assert get_arxivs(arxiv_text_2) == {'1511.0658'}
     
     arxiv_text_v1 = '''X. Zhang and L. Duan, “Optimal deployment of UAV net- works for delivering emergency wireless coverage,” 2017, arXIV:1710.05616v1.'''
-    assert get_arxivs(arxiv_text_v1) == {'1710.055616v1'}
+    assert get_arxivs(arxiv_text_v1) == {'1710.05616v1'}
     
     # 匹配链接格式的arxiv
     arxiv_url = '''.. link is https://arxiv.org/abs/1812.02979 '''
