@@ -3,11 +3,12 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 17:23
+@edit time: 2020-04-28 18:09
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
-from expdf.extractor import get_ref_title
+from expdf.extractor import get_ref_title, get_urls
+
 
 def test_get_ref_title():
     # 引号引用类型
@@ -19,3 +20,18 @@ def test_get_ref_title():
     # 暂时无法匹配的类型
     ref_3 = '''My title.: “123”, 1998'''
     assert get_ref_title(ref_3) == 'My title.: “123”, 1998'
+
+
+def test_get_urls():
+    # 匹配所有url
+    long_text = '''my first pdf: https://www.demo1.com/h3.pdf
+                my second pdf: github.io/mypage/h4.pdf'''
+    assert get_urls(long_text) == {'https://www.demo1.com/h3.pdf', 'github.io/mypage/h4.pdf'}
+
+    # 匹配仅有的url
+    short_text = ''' bupt.edu.cn/xxx.pdf '''
+    assert get_urls(short_text) == {'bupt.edu.cn/xxx.pdf'}
+
+    # 如果没有url
+    none_text = '''here is my sentence and contains no urls'''
+    assert get_urls(none_text) == set()
