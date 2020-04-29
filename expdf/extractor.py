@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 20:33
+@edit time: 2020-04-29 11:57
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -60,8 +60,12 @@ def get_dois(text):
     @param text: 文本
     @return set, all dois
     """
-    DOI_REGEX = r"""DOI:\s?([^\s,]+)"""
-    res = set(re.findall(DOI_REGEX, text, re.IGNORECASE))
+    re_text = r"""DOI:\s?([^\s,]+)"""
+    re_url = r'''https?://doi.org/([^\s,]+)'''
+    
+    res = []
+    res.extend(re.findall(re_text, text, re.I))
+    res.extend(re.findall(re_url, text, re.I))
     return set([r.strip(".") for r in res])
 
 
