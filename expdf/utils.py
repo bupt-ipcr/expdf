@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:21
+@edit time: 2020-04-29 20:22
 @FilePath: /expdf/utils.py
 @desc: 
 
@@ -15,8 +15,10 @@ Web url matching:
 
 from collections.abc import Iterable
 from pdfminer.pdftypes import PDFObjRef
-from .extractor import get_links
-from .extractor import Link
+from .extractor import (
+    Link,
+    get_links
+)
 
 
 def resolve_PDFObjRef(pdfobj):
