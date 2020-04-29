@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:08
+@edit time: 2020-04-29 20:18
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -85,24 +85,21 @@ def get_dois(text):
     return links
 
 
-def get_links(uri):
+def get_links(text):
     """获取uri中包含的所有link
-    在uri中依次检测资源类型，并添加到links中
-    如果最终没有找到符合的资源类型，默认为url类型
+    依次用arxiv, doi, url规则匹配links
+    对于url匹配的结果，要查找有没有相等的Link，避免出现重复
 
-    @param uri: 需要处理的资源
+    @param text: 需要处理的文本
     @return: list link列表
     """
     links = []
-    # 处理ref
-    if uri.lower().endswith(".pdf"):
-        links.append(Link(uri, 'pdf'))
-    else:
-        for arxiv_uri in get_arxivs(uri):
-            links.append(Link(uri, 'pdf'))
-        for doi_uri in get_dois(uri):
-            links.append(Link(uri, 'pdf'))
-    # 如果links中没有内容，则使用默认值
-    if not links:
-        links.append(Link(uri, 'url'))
+    # 对于arxiv和doi，不考虑重复
+    links.extend(get_arxivs(text))
+    links.extend(get_dois(text))
+    # 对于url要检查重复
+    for link in get_urls(text):
+        if link not in links:
+            links.append(link)
+            
     return links
