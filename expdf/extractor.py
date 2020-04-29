@@ -49,9 +49,9 @@ def get_urls(text):
     links = []
     for url in set(re.findall(URL_REGEX, text, re.I)):
         if url.lower().endswith('pdf'):
-            links.append(Link(url, 'pdf', url))
+            links.append(Link('pdf', url, url))
         else:
-            links.append(Link(url, 'url', url))
+            links.append(Link('url', url, url))
     return links
 
 
