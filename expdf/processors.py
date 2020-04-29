@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 12:03
+@edit time: 2020-04-29 20:21
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -21,9 +21,7 @@ import re
 from .extractor import (
     Link,
     get_ref_title,
-    get_urls,
-    get_arxivs,
-    get_dois
+    get_links
 )
 from .utils import flatten, resolve_PDFObjRef
 from .xmp import xmp_to_dict
@@ -120,11 +118,7 @@ def process_text(text):
     @return links, refs
     """
     # 处理links
-    links = []
-    links.extend(Link(url, 'url', url) for url in get_urls(text))
-    links.extend(Link(arxiv, 'arxiv', f'http://arxiv.org/abs/{arxiv}') for arxiv in get_arxivs(text))
-    # TODO: 增加DOI的link信息
-    links.extend(Link(doi, 'doi', doi) for doi in get_dois(text))
+    links = get_links(text)
 
     # 处理refs
     refs = []
