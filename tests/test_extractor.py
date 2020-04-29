@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:09
+@edit time: 2020-04-29 20:19
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -36,7 +36,7 @@ def test_get_urls():
     urls = get_urls(long_text)
     link1 = Link('pdf', 'https://www.demo1.com/h3.pdf', 'https://www.demo1.com/h3.pdf')
     link2 = Link('url', 'github.io/mypage/h4.html', 'github.io/mypage/h4.html')
-        
+
     assert link1 in urls
     assert link2 in urls
 
@@ -76,3 +76,16 @@ def test_get_dois():
     # 匹配url格式的DOI
     doi_url = '''Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
     assert get_dois(doi_url) == [Link('doi', '10.1145/3342280/3342327', 'https://doi.org/10.1145/3342280/3342327')]
+
+
+def test_get_links():
+    test_text = '''
+    my first pdf: https://www.demo1.com/h3.pdf
+    arXiv preprint arXiv:1312.5602, 2013
+    Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
+
+    pdf_link = Link('pdf', 'https://www.demo1.com/h3.pdf', 'https://www.demo1.com/h3.pdf')
+    arxiv_link = Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602')
+    doi_link = Link('doi', '10.1145/3342280/3342327', 'https://doi.org/10.1145/3342280/3342327')
+
+    assert get_links(test_text) == [arxiv_link, doi_link, pdf_link]
