@@ -3,14 +3,15 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 20:33
+@edit time: 2020-04-29 11:58
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
 from expdf.extractor import (
     get_ref_title,
     get_urls,
-    get_arxivs
+    get_arxivs,
+    get_dois
 )
 
 
@@ -55,3 +56,16 @@ def test_get_arxivs():
     # 匹配链接格式的arxiv
     arxiv_url = '''.. link is https://arxiv.org/abs/1812.02979 '''
     assert get_arxivs(arxiv_url) == {'1812.02979'}
+
+
+def test_get_dois():
+    # 匹配文本格式的DOI
+    doi_text = '''Catalog IDs
+    DOI: 10.1109/INFCOMW.2019.8845154
+    ISBN: 9781728118789'''
+    assert get_dois(doi_text) == {'10.1109/INFCOMW.2019.8845154'}
+    
+    # 匹配url格式的DOI
+    doi_url = '''Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
+    assert get_dois(doi_url) == {'10.1145/3342280/3342327'}
+# TODO test_get_links
