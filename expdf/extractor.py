@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:18
+@edit time: 2020-04-29 20:29
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -15,7 +15,8 @@ class Link:
         self.uri, self.linktype, self.link = uri, linktype, link
 
     def __eq__(self, other):
-        return self.link == other.link
+        # 兼容http与https的差异
+        return self.link == other.link or self.link.replace('https', 'http') == other.link.replace('https', 'http')
 
 
 def get_ref_title(ref_text):
