@@ -3,25 +3,30 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:21
+@edit time: 2020-04-29 12:03
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
-from .xmp import xmp_to_dict
-from .utils import get_urls, get_arxivs, get_dois
-from .utils import flatten, resolve_PDFObjRef
-from .extractor import Link
-from .extractor import get_ref_title
-import re
-from pdfminer.pdftypes import resolve1
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from io import BytesIO
 from pdfminer import settings as pdfminer_settings
 pdfminer_settings.STRICT = False
+
+from io import BytesIO
+from pdfminer.layout import LAParams
+from pdfminer.converter import TextConverter
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdftypes import resolve1
+import re
+from .extractor import (
+    Link,
+    get_ref_title,
+    get_urls,
+    get_arxivs,
+    get_dois
+)
+from .utils import flatten, resolve_PDFObjRef
+from .xmp import xmp_to_dict
 
 
 def process_doc(doc: PDFDocument):
@@ -123,6 +128,8 @@ def process_text(text):
 
     # 处理refs
     refs = []
+    # TODO 将查找方式改为找到\nReferences\n (不区分大小写)
+    # TODO 考虑每个references前面不带有[1]的情况
     lines = text.split('\n')
 
     # 通过引用前的 "References" 标题查找引用范围的文本
