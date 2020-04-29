@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:19
+@edit time: 2020-04-29 20:37
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -43,7 +43,7 @@ def test_get_urls():
     # 匹配仅有的url
     short_text = ''' bupt.edu.cn/xxx.pdf '''
     s_url = get_urls(short_text)[0]
-    assert s_url == Link('pdf', 'bupt.edu.cn/xxx.pdf', 'bupt.edu.cn/xxx.pdf')
+    assert s_url.equal(Link('pdf', 'bupt.edu.cn/xxx.pdf', 'bupt.edu.cn/xxx.pdf'))
 
     # 如果没有url
     none_text = '''here is my sentence and contains no urls'''
@@ -53,17 +53,17 @@ def test_get_urls():
 def test_get_arxivs():
     # 匹配描述格式的arxiv
     arxiv_text_1 = '''arXiv preprint arXiv:1312.5602, 2013.'''
-    assert get_arxivs(arxiv_text_1) == [Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602')]
+    assert get_arxivs(arxiv_text_1)[0].equal(Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602'))
 
     arxiv_text_2 = ''' arXiv.org.1511.0658'''
-    assert get_arxivs(arxiv_text_2) == [Link('arxiv', '1511.0658', 'https://arxiv.org/abs/1511.0658')]
+    assert get_arxivs(arxiv_text_2)[0].equal(Link('arxiv', '1511.0658', 'https://arxiv.org/abs/1511.0658'))
 
     arxiv_text_v1 = '''X. Zhang and L. Duan, “Optimal deployment of UAV net- works for delivering emergency wireless coverage,” 2017, arXIV:1710.05616v1.'''
-    assert get_arxivs(arxiv_text_v1) == [Link('arxiv', '1710.05616v1', 'https://arxiv.org/abs/1710.05616v1')]
+    assert get_arxivs(arxiv_text_v1)[0].equal(Link('arxiv', '1710.05616v1', 'https://arxiv.org/abs/1710.05616v1'))
 
     # 匹配链接格式的arxiv
     arxiv_url = '''.. link is https://arxiv.org/abs/1812.02979 '''
-    assert get_arxivs(arxiv_url) == [Link('arxiv', '1812.02979', 'https://arxiv.org/abs/1812.02979')]
+    assert get_arxivs(arxiv_url)[0].equal(Link('arxiv', '1812.02979', 'https://arxiv.org/abs/1812.02979'))
 
 
 def test_get_dois():
@@ -71,11 +71,11 @@ def test_get_dois():
     doi_text = '''Catalog IDs
     DOI: 10.1109/INFCOMW.2019.8845154
     ISBN: 9781728118789'''
-    assert get_dois(doi_text) == [Link('doi', '10.1109/INFCOMW.2019.8845154', 'https://doi.org/10.1109/INFCOMW.2019.8845154')]
+    assert get_dois(doi_text)[0].equal(Link('doi', '10.1109/INFCOMW.2019.8845154', 'https://doi.org/10.1109/INFCOMW.2019.8845154'))
 
     # 匹配url格式的DOI
     doi_url = '''Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
-    assert get_dois(doi_url) == [Link('doi', '10.1145/3342280/3342327', 'https://doi.org/10.1145/3342280/3342327')]
+    assert get_dois(doi_url)[0].equal(Link('doi', '10.1145/3342280/3342327', 'https://doi.org/10.1145/3342280/3342327'))
 
 
 def test_get_links():
