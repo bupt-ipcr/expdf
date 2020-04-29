@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 19:54
+@edit time: 2020-04-29 20:03
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -61,11 +61,13 @@ def get_arxivs(text):
     """
     re_texts = [r"""arxiv:\s?([^\s,]+)""", r"""arXiv\.org\.\s?([^\s,]+)"""]
     re_url = r"""arxiv.org/abs/([^\s,]+)"""
-    res = []
+    arxivs = []
     for re_text in re_texts:
-        res.extend(re.findall(re_text, text, re.I))
-    res.extend(re.findall(re_url, text, re.I))
-    return set([r.strip(".") for r in res])
+        arxivs.extend(re.findall(re_text, text, re.I))
+    arxivs.extend(re.findall(re_url, text, re.I))
+    
+    links = [Link('arxiv', arxiv, f'https://arxiv.org/abs/{arxiv}') for arxiv in set([r.strip(".") for r in arxivs])]
+    return links
 
 
 def get_dois(text):
