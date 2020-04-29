@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-14 21:46
-@FilePath: /xmp.py
+@edit time: 2020-04-29 19:59
+@FilePath: /expdf/xmp.py
 @desc: 获取PDF中的XMP信息，并将其转换为特定格式返回
 
 Parses XMP metadata from PDF files.
@@ -50,7 +50,7 @@ class XmpParser(object):
         """ A dictionary of all the parsed metadata. """
         meta = defaultdict(dict)
         for desc in self.rdftree.findall(RDF_NS+'Description'):
-            for el in desc.getchildren():
+            for el in list(desc):
                 ns, tag = self._parse_tag(el)
                 value = self._parse_value(el)
                 meta[ns][tag] = value
