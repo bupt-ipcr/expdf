@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:05
+@edit time: 2020-04-29 20:09
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -71,8 +71,8 @@ def test_get_dois():
     doi_text = '''Catalog IDs
     DOI: 10.1109/INFCOMW.2019.8845154
     ISBN: 9781728118789'''
-    assert get_dois(doi_text) == {'10.1109/INFCOMW.2019.8845154'}
+    assert get_dois(doi_text) == [Link('doi', '10.1109/INFCOMW.2019.8845154', 'https://doi.org/10.1109/INFCOMW.2019.8845154')]
 
     # 匹配url格式的DOI
     doi_url = '''Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
-    assert get_dois(doi_url) == {'10.1145/3342280/3342327'}
+    assert get_dois(doi_url) == [Link('doi', '10.1145/3342280/3342327', 'https://doi.org/10.1145/3342280/3342327')]
