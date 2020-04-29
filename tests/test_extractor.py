@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 19:58
+@edit time: 2020-04-29 20:05
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -53,17 +53,17 @@ def test_get_urls():
 def test_get_arxivs():
     # 匹配描述格式的arxiv
     arxiv_text_1 = '''arXiv preprint arXiv:1312.5602, 2013.'''
-    assert get_arxivs(arxiv_text_1) == {'1312.5602'}
+    assert get_arxivs(arxiv_text_1) == [Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602')]
 
     arxiv_text_2 = ''' arXiv.org.1511.0658'''
-    assert get_arxivs(arxiv_text_2) == {'1511.0658'}
+    assert get_arxivs(arxiv_text_2) == [Link('arxiv', '1511.0658', 'https://arxiv.org/abs/1511.0658')]
 
     arxiv_text_v1 = '''X. Zhang and L. Duan, “Optimal deployment of UAV net- works for delivering emergency wireless coverage,” 2017, arXIV:1710.05616v1.'''
-    assert get_arxivs(arxiv_text_v1) == {'1710.05616v1'}
+    assert get_arxivs(arxiv_text_v1) == [Link('arxiv', '1710.05616v1', 'https://arxiv.org/abs/1710.05616v1')]
 
     # 匹配链接格式的arxiv
     arxiv_url = '''.. link is https://arxiv.org/abs/1812.02979 '''
-    assert get_arxivs(arxiv_url) == {'1812.02979'}
+    assert get_arxivs(arxiv_url) == [Link('arxiv', '1812.02979', 'https://arxiv.org/abs/1812.02979')]
 
 
 def test_get_dois():
