@@ -3,15 +3,17 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 11:58
+@edit time: 2020-04-29 19:58
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
 from expdf.extractor import (
+    Link,
     get_ref_title,
     get_urls,
     get_arxivs,
-    get_dois
+    get_dois,
+    get_links
 )
 
 
@@ -30,16 +32,22 @@ def test_get_ref_title():
 def test_get_urls():
     # 匹配所有url
     long_text = '''my first pdf: https://www.demo1.com/h3.pdf
-                my second pdf: github.io/mypage/h4.pdf'''
-    assert get_urls(long_text) == {'https://www.demo1.com/h3.pdf', 'github.io/mypage/h4.pdf'}
+                my second pdf: github.io/mypage/h4.html'''
+    urls = get_urls(long_text)
+    link1 = Link('pdf', 'https://www.demo1.com/h3.pdf', 'https://www.demo1.com/h3.pdf')
+    link2 = Link('url', 'github.io/mypage/h4.html', 'github.io/mypage/h4.html')
+        
+    assert link1 in urls
+    assert link2 in urls
 
     # 匹配仅有的url
     short_text = ''' bupt.edu.cn/xxx.pdf '''
-    assert get_urls(short_text) == {'bupt.edu.cn/xxx.pdf'}
+    s_url = get_urls(short_text)[0]
+    assert s_url == Link('pdf', 'bupt.edu.cn/xxx.pdf', 'bupt.edu.cn/xxx.pdf')
 
     # 如果没有url
     none_text = '''here is my sentence and contains no urls'''
-    assert get_urls(none_text) == set()
+    assert get_urls(none_text) == []
 
 
 def test_get_arxivs():
@@ -64,8 +72,7 @@ def test_get_dois():
     DOI: 10.1109/INFCOMW.2019.8845154
     ISBN: 9781728118789'''
     assert get_dois(doi_text) == {'10.1109/INFCOMW.2019.8845154'}
-    
+
     # 匹配url格式的DOI
     doi_url = '''Demos·August 2019 · Pages 114-115 · https://doi.org/10.1145/3342280/3342327'''
     assert get_dois(doi_url) == {'10.1145/3342280/3342327'}
-# TODO test_get_links
