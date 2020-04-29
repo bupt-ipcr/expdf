@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:29
+@edit time: 2020-04-29 20:33
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -12,11 +12,15 @@ import re
 
 class Link:
     def __init__(self, linktype, uri, link):
-        self.uri, self.linktype, self.link = uri, linktype, link
+        self.linktype, self.uri, self.link = linktype, uri, link
 
     def __eq__(self, other):
         # 兼容http与https的差异
         return self.link == other.link or self.link.replace('https', 'http') == other.link.replace('https', 'http')
+
+    def equal(self, other):
+        """严格定义相等"""
+        return self.uri == other.uri and self.linktype == other.linktype and self.link == other.link
 
 
 def get_ref_title(ref_text):
@@ -102,5 +106,5 @@ def get_links(text):
     for link in get_urls(text):
         if link not in links:
             links.append(link)
-            
+
     return links
