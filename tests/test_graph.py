@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:13
+@edit time: 2020-04-30 10:55
 @FilePath: /tests/test_graph.py
 @desc: 测试Graph模块是否正常工作
 """
@@ -12,12 +12,10 @@ from expdf.graph import PDFNode, LocalPDFNode, Graph
 
 
 class TestPDFNode:
-    @classmethod
-    def setup_class(cls):
+    def setup(self):
         PDFNode.clear_nodes()
 
-    @classmethod
-    def teardown_class(cls):
+    def teardown(self):
         PDFNode.clear_nodes()
 
     def test_new(self):
@@ -67,6 +65,24 @@ class TestPDFNode:
         # ta对象应该有posterity，但是没有children
         assert na.children == set()
         assert na.posterities == {n0}
+        
+    def test_instances(self):
+        """测试记录所有实例的instances是否正常工作
+        instances的key应该是小写并去除 非字母数字下划线 字符后的结果
+        """
+        n0 = PDFNode('A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations.')
+        # 验证记录的key是否小写且去除特殊符号
+        assert list(PDFNode.instances.keys()) == ['acollaborativedistributedstrategyformultiagentreinforcementlearningthroughconsensusinnovations']
+        # 验证本身的title没变化
+        assert n0.title == 'A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations.'
+        
+        # 验证仅符号不同的Node不会被新建
+        n0new = PDFNode('?A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
+        assert n0new == n0
+        
+        # 验证字母或数字不同的Node会被新建
+        n1 = PDFNode('A new collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
+        assert n0 != n1
 
 
 class TestLocalPDFNode:
@@ -103,7 +119,7 @@ class TestGraph:
     @classmethod
     def teardown_class(cls):
         PDFNode.clear_nodes()
-
+    # TODO graph 分方法测试
     def test_graph_calc(self):
         LocalPDFNode('title0', refs=['title1', 'title2'])
         LocalPDFNode('title1', refs=['title3'])
