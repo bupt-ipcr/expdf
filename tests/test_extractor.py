@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:37
+@edit time: 2020-04-30 11:23
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -27,6 +27,10 @@ def test_get_ref_title():
     # 暂时无法匹配的类型
     ref_3 = '''My title.: “123”, 1998'''
     assert get_ref_title(ref_3) == 'My title.: “123”, 1998'
+    # strict mode
+    assert get_ref_title(ref_1, strict=True) == 'Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,'
+    assert get_ref_title(ref_2, strict=True) == 'Web caching and zipf-like distributions: evidence and implications'
+    assert get_ref_title(ref_3, strict=True) is None
 
 
 def test_get_urls():
