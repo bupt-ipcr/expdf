@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 12:12
+@edit time: 2020-04-30 22:30
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -28,6 +28,12 @@ def test_get_ref_title():
     
     ref_2_a = '''Abounadi, J., Bertsekas, D. and Borkar, V. S. (2001). Learning algorithms for Markov Decision  Processes with average cost. SIAM Journal on Control and Optimization, 40 681–698.'''
     assert get_ref_title(ref_2_a) == 'Learning algorithms for Markov Decision Processes with average cost'
+    
+    ref_2_b = '''Lowe, R., Wu, Y., Tamar, A., Harb, J., Abbeel, P. and Mordatch, I. (2017). Multi-agent actor-critic  for mixed cooperative-competitive environments. arXiv preprint arXiv:1706.02275.'''
+    assert get_ref_title(ref_2_b) == 'Multi-agent actor-critic for mixed cooperative-competitive environments'
+    
+    ref_2_al = '''Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., Graves, A., Riedmiller, M., Fidjeland, A. K., Ostrovski, G. et al. (2015). Human-level control through deep reinforcement learning. Nature, 518 529–533.'''
+    assert get_ref_title(ref_2_al, strict=True) == 'Human-level control through deep reinforcement learning'
     
     # 暂时无法匹配的类型
     ref_3 = '''My title.: “123”, 1998'''
