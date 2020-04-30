@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:33
+@edit time: 2020-04-30 11:09
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -23,13 +23,14 @@ class Link:
         return self.uri == other.uri and self.linktype == other.linktype and self.link == other.link
 
 
-def get_ref_title(ref_text):
+def get_ref_title(ref_text, *, strict=False):
     """从引用文本中匹配引用文章标题
 
     使用不同的标准格式匹配title，匹配失败的使用文本作为title返回
     考虑到分割获取ref_text的文本会有污染，使用re.search查找
 
     @param: ref_text: 引用原文
+    @param: strict: 严格模式（只有符合匹配规则的才返回）
     @return: ref title 引用文章的标题
     """
     # e.g. W. Jiang, G. Feng and S. Qin, “Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,” in IEEETransactions on Mobile Computing, vol. 16, no. 5, pp. 1382-1393, May2017.
@@ -39,6 +40,8 @@ def get_ref_title(ref_text):
     if re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text):
         return re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\..*(in|In|IN)''', ref_text).groups()[1]
 
+    if strict:
+        return None
     return ref_text
 
 
