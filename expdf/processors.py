@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-29 20:21
+@edit time: 2020-04-30 11:10
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -122,35 +122,33 @@ def process_text(text):
 
     # 处理refs
     refs = []
-    # TODO 将查找方式改为找到\nReferences\n (不区分大小写)
-    # TODO 考虑每个references前面不带有[1]的情况
-    lines = text.split('\n')
-
-    # 通过引用前的 "References" 标题查找引用范围的文本
-    # 当在文中搜索到包含 "References"(不区分大小写) 字样时，将文本从 's' 开始截断，防止被重复搜索
-    # 如果紧接着能看到[1]这样的引用计数，说明找对了
-    # 否则接着查找，直到文本中找不到 "References" 为止
-    ref_text = text
-    while True:
-        re_ref = re.search(r'REFERENCES', ref_text, re.I)
-        if not re_ref:
-            break
-        ref_start = re_ref.span()[1]
-        ref_text = ref_text[ref_start:]
-        if '[' in ref_text[ref_start: ref_start + 5]:
-            break
-
-    # 匹配所有引用文章的具体标题
-    # 将References标志之后的文本，按照 [\d+] 为分隔符分开，每行都是一条ref
+    # 获取引用的内容
+    ref_start = re.search(r'\nREFERENCES\n', text, re.I).span()[1]
+    ref_text = text[ref_start:]
+    
     # 使用各种论文引用格式匹配ref标题，匹配不到的暂时使用ref全文作为标题
 
-    ref_text = ref_text.replace('\n', '')   # 将\n替换掉，以便re搜索
-    ref_lines = re.split(r'\[\d+\]', ref_text)  # 用[\d+]分割
-    for ref_line in ref_lines:
-        if not ref_line:
-            continue
-
-        ref_text = ref_line.strip()  # 删除文本前后的空白字符
-        ref = get_ref_title(ref_text)   # 获取引用文章的标题
-        refs.append(ref)
+    # 如果在ref_text的前10个字符中搜索到 [1] 形式的 引用序号，则用 [\d+] 作为分隔符
+    if re.search(r'\[\d+\]', ref_text[:10]):
+        ref_text = ref_text.replace('\n', '')   # 将\n替换掉，以便re搜索
+        ref_lines = re.split(r'\[\d+\]', ref_text)  # 用[\d+]分割
+        for ref_line in ref_lines:
+            if not ref_line:
+                continue
+            ref_line = ref_line.strip()  # 删除文本前后的空白字符
+            ref = get_ref_title(ref_line)   # 获取引用文章的标题
+            if ref is not None:
+                refs.append(ref)
+    # 否则用\n\n分割，且在匹配时采用严格模式
+    else:
+        ref_lines = ref_text.split('\n\n')
+        for ref_line in ref_lines:
+            ref_line = ref_line.replace('\n', '')   # 将\n替换掉，以便re搜索
+            ref_line = ref_line.strip()  # 删除文本前后的空白字符
+            if not ref_line:
+                continue
+            ref = get_ref_title(ref_line, strict=True)
+            if ref is not None:
+                refs.append(ref)
+                
     return links, refs
