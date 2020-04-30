@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 13:22
+@edit time: 2020-04-30 22:11
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -42,11 +42,11 @@ def get_ref_title(ref_text, *, strict=False):
         return re.search(quote_re, ref_text, re.I).groups()[1]
     
     # e.g. L. Breslau, Pei Cao, Li Fan, G. Phillips, and S. Shenker. Web caching and zipf-like distributions: evidence and implications. In INFOCOM ’99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE, volume 1, pages 126–134 vol.1, Mar 1999.
-    dot_re = r'''.+?[^A-Z]\.\s*([()0-9].)?\s*([^.]+?[^A-Z])\.(.*)$'''# 注意这里不能用re.I
+    dot_re = r'''.+?[^A-Z]\.\s*([()0-9]\.)?\s*([^.]+?[^A-Z])\.(.*)$'''# 注意这里不能用re.I
     if re.search(dot_re, ref_text): 
         # 光搜索到句子还不行，需要后续有标识
         groups = re.search(dot_re, ref_text).groups()
-        if re.search(r'''in|arxiv|doi|journal|IEEE|\w+com''', groups[2], re.I):
+        if re.search(r'''in|arxiv|doi|journal|IEEE|\w+com|press''', groups[2], re.I):
             return groups[1]
 
     if strict:
