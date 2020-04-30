@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 12:17
+@edit time: 2020-04-30 13:22
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -37,14 +37,15 @@ def get_ref_title(ref_text, *, strict=False):
     ref_text = ref_text.replace('- ', '-').replace('  ', ' ')
     
     # e.g. W. Jiang, G. Feng and S. Qin, “Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,” in IEEETransactions on Mobile Computing, vol. 16, no. 5, pp. 1382-1393, May2017.
-    if re.search(r'''([^“]+)[,.]?\s*“(.+)”.*(in|arxiv|doi|journal|IEEE|\w+com)''', ref_text, re.I):
-        return re.search(r'''([^“]+)[,.]?\s*“(.+)”.*(in|arxiv|doi|journal|IEEE|\w+com)''', ref_text, re.I).groups()[1]
+    quote_re = r'''([^“]+)[,.]?\s*“(.+)”.*(in|arxiv|doi|journal|IEEE|\w+com)'''
+    if re.search(quote_re, ref_text, re.I):
+        return re.search(quote_re, ref_text, re.I).groups()[1]
     
     # e.g. L. Breslau, Pei Cao, Li Fan, G. Phillips, and S. Shenker. Web caching and zipf-like distributions: evidence and implications. In INFOCOM ’99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE, volume 1, pages 126–134 vol.1, Mar 1999.
-    # 注意这里不能用re.I
-    if re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\.(.*)$''', ref_text): 
+    dot_re = r'''.+?[^A-Z]\.\s*([()0-9].)?\s*([^.]+?[^A-Z])\.(.*)$'''# 注意这里不能用re.I
+    if re.search(dot_re, ref_text): 
         # 光搜索到句子还不行，需要后续有标识
-        groups = re.search(r'''(.+?[^A-Z])\.\s*([^.]+?[^A-Z])\.(.*)$''', ref_text).groups()
+        groups = re.search(dot_re, ref_text).groups()
         if re.search(r'''in|arxiv|doi|journal|IEEE|\w+com''', groups[2], re.I):
             return groups[1]
 
