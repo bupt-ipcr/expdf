@@ -65,7 +65,7 @@ class TestPDFNode:
         # ta对象应该有posterity，但是没有children
         assert na.children == set()
         assert na.posterities == {n0}
-        
+
     def test_instances(self):
         """测试记录所有实例的instances是否正常工作
         instances的key应该是小写并去除 非字母数字下划线 字符后的结果
@@ -75,11 +75,11 @@ class TestPDFNode:
         assert list(PDFNode.instances.keys()) == ['acollaborativedistributedstrategyformultiagentreinforcementlearningthroughconsensusinnovations']
         # 验证本身的title没变化
         assert n0.title == 'A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations.'
-        
+
         # 验证仅符号不同的Node不会被新建
         n0new = PDFNode('?A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
         assert n0new == n0
-        
+
         # 验证字母或数字不同的Node会被新建
         n1 = PDFNode('A new collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
         assert n0 != n1
