@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 10:55
+@edit time: 2020-04-30 11:24
 @FilePath: /tests/test_graph.py
 @desc: 测试Graph模块是否正常工作
 """
@@ -119,7 +119,7 @@ class TestGraph:
     @classmethod
     def teardown_class(cls):
         PDFNode.clear_nodes()
-    # TODO graph 分方法测试
+
     def test_graph_calc(self):
         LocalPDFNode('title0', refs=['title1', 'title2'])
         LocalPDFNode('title1', refs=['title3'])
