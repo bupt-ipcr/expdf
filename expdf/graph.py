@@ -3,13 +3,14 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:18
+@edit time: 2020-04-30 10:53
 @FilePath: /expdf/graph.py
 @desc: 制作PDF图结构
 """
 from collections import deque, defaultdict
 from functools import reduce
 import logging
+import re
 
 
 class PDFNode:
@@ -23,11 +24,11 @@ class PDFNode:
         对于有对应对象的情况，还要检查refs是否相等。因为这相当于一次
         get，不能改变属性
         """
-        if title in cls.instances:
-            obj = cls.instances[title]
+        node_key = re.sub(r'\W', '', title.lower())
+        if node_key in cls.instances:
+            obj = cls.instances[node_key]
 
             logging.info('get', title, obj.actients)
-            logging.info({actient.title for actient in obj.actients}, set(refs) if refs is not None else set())
 
             if refs is None or {actient.title for actient in obj.actients} == set(refs):
                 return obj
@@ -35,7 +36,7 @@ class PDFNode:
                 raise TypeError("Can't instantiate PDFNode with same title but different refs")
         else:
             obj = object.__new__(cls)
-            cls.instances[title] = obj
+            cls.instances[node_key] = obj
 
             # 对于新建对象，需要进行赋值处理
             obj.title, obj.local_file = title, False
