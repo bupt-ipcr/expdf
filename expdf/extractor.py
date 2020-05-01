@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 22:43
+@edit time: 2020-05-01 19:18
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -47,7 +47,7 @@ def get_ref_title(ref_text, *, strict=False):
     if re.search(dot_re, ref_text): 
         # 光搜索到句子还不行，需要后续有标识
         groups = re.search(dot_re, ref_text).groups()
-        if re.search(tail_re, groups[2], re.I):
+        if not strict or re.search(tail_re, groups[2], re.I):
             return groups[1]
 
     if strict:
