@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 21:47
+@edit time: 2020-05-01 19:24
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -104,7 +104,7 @@ def process_pages(doc: PDFDocument):
     return text, annots_list, maxpage
 
 
-def process_text(text):
+def process_text(text, force_strict=False):
     """处理text
 
     匹配text中的所有links:
@@ -114,8 +114,13 @@ def process_text(text):
         在引用页面中匹配以 [n] 开头且包含 “xxx” 的文本
         将文本重新匹配，只保留“”内部的信息，并去除首末的标点
 
-    @param text: pdf 文本
-    @return links, refs
+    Args:
+        text (str): pdf 文本
+        force_strict (bool): 强制启用strict模式
+        
+   Returns:
+        list: text中查找到的links
+        list: text中查找到的refs
     """
     # 处理links
     links = get_links(text)
@@ -136,7 +141,7 @@ def process_text(text):
             if not ref_line:
                 continue
             ref_line = ref_line.strip()  # 删除文本前后的空白字符
-            ref = get_ref_title(ref_line)   # 获取引用文章的标题
+            ref = get_ref_title(ref_line, strict=force_strict)   # 获取引用文章的标题
             if ref:
                 refs.append(ref)
     # 否则用\n\n分割，且在匹配时采用严格模式
