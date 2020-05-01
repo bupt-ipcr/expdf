@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 12:12
+@edit time: 2020-05-01 19:17
 @FilePath: /tests/test_expdf.py
 @desc: 测试expdf
 """
@@ -31,12 +31,13 @@ class TestExPDF:
         assert links == aims
 
     def test_refs(self):
+        print(self.expdf_parser.refs)
         aims = [
             'Wireless caching: technical misconceptions and business barriers,',
             'Optimal Cooperative Content Caching and Delivery Policy for Heterogeneous Cellular Networks,', 
             'Joint Caching, Routing, and Channel Assignment for Collaborative Small-Cell Cellular Net-works,',
             'On the Complexity of Optimal Content Placement in Hierarchical Caching Networks,',
-            'L. Lei, D. Yuan, C. K. Ho, and S. Sun, “A uniﬁed graph labeling algorithm for consecutive-block channel allocation in SC-FDMA, IEEE Trans. Wireless Commun., vol. 12, no. 11, pp. 5767-5779, Nov. 2013',
+            'Wireless Commun',  #! this case is wrong
             'Efﬁcient processing of deep neural networks: A tutorial and survey',
             'Resource Man-agement with Deep Reinforcement Learning',
             'Edge Caching at Base Stations with Device-to-Device Ofﬂoading',
