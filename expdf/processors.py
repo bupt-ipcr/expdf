@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 12:06
+@edit time: 2020-04-30 21:47
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -141,7 +141,7 @@ def process_text(text):
                 refs.append(ref)
     # 否则用\n\n分割，且在匹配时采用严格模式
     else:
-        ref_lines = re.split(r'(?<=\.)\s+?\n{1,2}(?=[A-Z])', ref_text)
+        ref_lines = re.split(r'(?<=[^A-Z]\.)\s*?\n{1,2}[^a-zA-Z]*?(?=[A-Z])', ref_text, 0, re.U)
         for ref_line in ref_lines:
             ref_line = ref_line.replace('\n', ' ')   # 将\n替换掉，以便re搜索
             ref_line = ref_line.strip()  # 删除文本前后的空白字符
