@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-01 19:24
+@edit time: 2020-05-01 19:25
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -118,7 +118,7 @@ def process_text(text, force_strict=False):
         text (str): pdf 文本
         force_strict (bool): 强制启用strict模式
         
-   Returns:
+    Returns:
         list: text中查找到的links
         list: text中查找到的refs
     """
