@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 22:32
+@edit time: 2020-04-30 22:43
 @FilePath: /expdf/extractor.py
 @desc: 匹配
 """
@@ -36,7 +36,7 @@ def get_ref_title(ref_text, *, strict=False):
     # pre process
     ref_text = ref_text.replace('- ', '-').replace('  ', ' ')
     # tail re
-    tail_re = r'in|arxiv|doi|journal|IEEE|\w+com|press|nature'
+    tail_re = r'in|arxiv|doi|journal|IEEE|\w+com|press|nature|\d+[–-]\d+'
     # e.g. W. Jiang, G. Feng and S. Qin, “Optimal Cooperative Content Cachingand Delivery Policy for Heterogeneous Cellular Networks,” in IEEETransactions on Mobile Computing, vol. 16, no. 5, pp. 1382-1393, May2017.
     quote_re = rf'''([^“]+)[,.]?\s*“(.+)”.*({tail_re})'''
     if re.search(quote_re, ref_text, re.I):
