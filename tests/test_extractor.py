@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 22:30
+@edit time: 2020-04-30 22:40
 @FilePath: /tests/test_extractor.py
 @desc: 测试extractor中匹配效果
 """
@@ -31,6 +31,12 @@ def test_get_ref_title():
     
     ref_2_b = '''Lowe, R., Wu, Y., Tamar, A., Harb, J., Abbeel, P. and Mordatch, I. (2017). Multi-agent actor-critic  for mixed cooperative-competitive environments. arXiv preprint arXiv:1706.02275.'''
     assert get_ref_title(ref_2_b) == 'Multi-agent actor-critic for mixed cooperative-competitive environments'
+    
+    ref_2_c = '''Macua, S. V., Tukiainen, A., Hern´andez, D. G.-O., Baldazo, D., de Cote, E. M. and Zazo, S. (2017). Di↵-dac: Distributed actor-critic for multitask deep reinforcement learning. arXiv preprint arXiv:1710.10363.'''
+    assert get_ref_title(ref_2_c) == 'Di↵-dac: Distributed actor-critic for multitask deep reinforcement learning'
+    
+    ref_2_d = '''Littman, M. L. (2001). Value-function reinforcement learning in Markov games. Cognitive Systems Research, 2 55–66.'''
+    assert get_ref_title(ref_2_d) == 'Value-function reinforcement learning in Markov games'
     
     ref_2_al = '''Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., Graves, A., Riedmiller, M., Fidjeland, A. K., Ostrovski, G. et al. (2015). Human-level control through deep reinforcement learning. Nature, 518 529–533.'''
     assert get_ref_title(ref_2_al, strict=True) == 'Human-level control through deep reinforcement learning'
