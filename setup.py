@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 2019-11-25 11:08
-@edit time: 2020-04-19 17:00
+@edit time: 2020-05-02 22:16
 @FilePath: /setup.py
 """
 
@@ -132,5 +132,11 @@ setup(
     # $ setup.py publish support.
     cmdclass={
         'upload': UploadCommand,
+    },
+    # entry point
+    entry_points={
+        'console_scripts': [
+            'expdf=expdf.cli:command_line',
+        ],
     },
 )
