@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:29
+@edit time: 2020-05-06 11:31
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -51,6 +51,12 @@ def create_parser():
     return parser
 
 
+def graph_all(pdfs):
+    print(f'generate expdf for pdf in pdfs')
+    print(f'generate graph')
+    print(f'generate svg html')
+
+
 def command_line():
     parser = create_parser()
     args = parser.parse_args()
@@ -75,7 +81,6 @@ def command_line():
             msg = f"{parser.prog}: error: {args.pdf_path} is not a pdf file"
             print(msg, file=sys.stderr)
             sys.exit(2)
-            
 
     for append_pdf in args.append_pdfs:
         logging.info(f'append a pdf file {append_pdf}')
@@ -91,9 +96,8 @@ def command_line():
     if pdfs == []:
         logging.warning(f'no pdf file')
 
-    print(f'generate expdf for pdf in pdfs')
-    print(f'generate graph')
-    print(f'generate svg html')
+    if pdfs:
+        graph_all(pdfs)
 
 
 if __name__ == '__main__':
