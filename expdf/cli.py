@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:31
+@edit time: 2020-05-06 11:32
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -76,7 +76,7 @@ def command_line():
     else:
         logging.info(f'find pdf file at {args.pdf_path}')
         if pdf_path.suffix == '.pdf':
-            pdfs.append(str(pdf_path))
+            pdfs.append(pdf_path)
         else:
             msg = f"{parser.prog}: error: {args.pdf_path} is not a pdf file"
             print(msg, file=sys.stderr)
@@ -86,7 +86,7 @@ def command_line():
         logging.info(f'append a pdf file {append_pdf}')
         append_file = here / append_pdf
         if append_file.suffix == '.pdf':
-            pdfs.append(str(append_file))
+            pdfs.append(append_file)
         else:
             msg = f"{parser.prog}: error: {append_file} is not a pdf file"
             print(msg, file=sys.stderr)
