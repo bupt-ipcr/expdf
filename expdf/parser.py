@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:19
+@edit time: 2020-05-06 11:47
 @FilePath: /expdf/parser.py
 @desc: 解析PDF
 """
@@ -59,8 +59,9 @@ class ExPDFParser:
         if 'dc' in metadata:
             if 'title' in metadata['dc']:
                 return metadata['dc']['title']['x-default']
-        # 如果找不到title，则抛出异常
-        raise AttributeError("has no attribute 'title'")
+            
+        # 如果找不到则用filename代替
+        return self._data['filename']
 
     @property
     def links(self):
