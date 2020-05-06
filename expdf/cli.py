@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:32
+@edit time: 2020-05-06 11:33
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -82,6 +82,7 @@ def command_line():
             print(msg, file=sys.stderr)
             sys.exit(2)
 
+    # get all append pdfs
     for append_pdf in args.append_pdfs:
         logging.info(f'append a pdf file {append_pdf}')
         append_file = here / append_pdf
