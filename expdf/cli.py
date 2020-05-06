@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:44
+@edit time: 2020-05-06 11:49
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -19,6 +19,7 @@ from expdf import (
 )
 import logging
 from pathlib import Path
+from tqdm import tqdm
 import sys
 
 here = Path().resolve()
@@ -58,7 +59,7 @@ def create_parser():
 
 def graph_all(pdfs):
     logging.info(f'generate expdf for pdf in pdfs')
-    for pdf in pdfs:
+    for pdf in tqdm(pdfs, desc="parser all pdfs"):
         if not pdf.exists():
             raise FileNotFoundError(f"No such file or directory: '{pdf}'")
         else:
