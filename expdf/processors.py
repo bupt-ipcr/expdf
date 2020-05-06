@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-01 19:25
+@edit time: 2020-05-06 16:45
 @FilePath: /expdf/processors.py
 @desc: 处理器集合
 """
@@ -128,7 +128,7 @@ def process_text(text, force_strict=False):
     # 处理refs
     refs = []
     # 获取引用的内容
-    ref_start = re.search(r'\nREFERENCES\n', text, re.I).span()[1]
+    ref_start = re.search(r'\sREFERENCES\s', text, re.I).span()[1]
     ref_text = text[ref_start:]
     
     # 使用各种论文引用格式匹配ref标题，匹配不到的暂时使用ref全文作为标题
