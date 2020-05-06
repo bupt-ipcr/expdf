@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:16
+@edit time: 2020-05-06 11:21
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -12,8 +12,11 @@ and generate reference relation of all PDFs(given or inside PDF)
 
 import argparse
 import expdf
+import logging
 from pathlib import Path
 here = Path().resolve()
+
+logging.basicConfig(level=logging.WARNING)
 
 
 def create_parser():
@@ -55,22 +58,23 @@ def command_line():
     pdf_path = here / args.pdf_path
 
     # glob all pdfs
-    print(f'recursive is {args.recursive}')
+    logging.info(f'recursive is {args.recursive}')
     if args.recursive:
-        print(f'find all pdf in {args.pdf_path}')
+        logging.info(f'find all pdf in {args.pdf_path}')
         for file in pdf_path.iterdir():
-            print(f'find a file {file}')
+            logging.info(f'  find a file {file}')
             if file.suffix == '.pdf':
+                logging.info(f'  append a pdf file {file}')
                 pdfs.append(str(file))
     else:
-        print(f'find pdf file at {args.pdf_path}')
+        logging.info(f'find pdf file at {args.pdf_path}')
         if pdf_path.suffix == '.pdf':
             pdfs.append(str(pdf_path))
         else:
             raise TypeError(f"{args.pdf_path} is not a pdf file")
 
     for append_pdf in args.append_pdfs:
-        print(f'append a pdf file {append_pdf}')
+        logging.info(f'append a pdf file {append_pdf}')
         append_file = here / append_pdf
         if append_file.suffix == '.pdf':
             pdfs.append(str(append_file))
@@ -79,7 +83,7 @@ def command_line():
 
     # assert pdfs is not []
     if pdfs == []:
-        print(f'no pdf file')
+        logging.warning(f'no pdf file')
 
     print(f'generate expdf for pdf in pdfs')
     print(f'generate graph')
