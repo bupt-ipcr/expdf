@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:38
+@edit time: 2020-05-06 11:43
 @FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -11,12 +11,17 @@ and generate reference relation of all PDFs(given or inside PDF)
 """
 
 import argparse
-import expdf
+from expdf import (
+    LocalPDFNode,
+    Graph,
+    ExPDFParser,
+    render
+)
 import logging
 from pathlib import Path
 import sys
-here = Path().resolve()
 
+here = Path().resolve()
 logging.basicConfig(level=logging.WARNING)
 
 
@@ -58,8 +63,15 @@ def graph_all(pdfs):
             raise FileNotFoundError(f"No such file or directory: '{pdf}'")
         else:
             logging.info('create LocalPDFNode of {pdf}')
+            expdf_parser = ExPDFParser(f"{pdf.resolve()}")
+            localPDFNode = LocalPDFNode(expdf_parser.title, expdf_parser.refs)
+
     logging.info(f'generate graph')
+    graph = Graph()
+    graph.calculate()
+
     logging.info(f'generate svg html')
+    render(graph.infos, 'svg.html')
 
 
 def command_line():
