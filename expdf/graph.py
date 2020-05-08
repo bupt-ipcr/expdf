@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 10:53
-@FilePath: /expdf/graph.py
+@edit time: 2020-05-08 16:54
+@FilePath: /expdf/expdf/graph.py
 @desc: 制作PDF图结构
 """
 from collections import deque, defaultdict
@@ -39,6 +39,7 @@ class PDFNode:
             cls.instances[node_key] = obj
 
             # 对于新建对象，需要进行赋值处理
+            obj.node_key = node_key
             obj.title, obj.local_file = title, False
             obj.parents, obj.children = set(), set()
             obj.posterities = set()
