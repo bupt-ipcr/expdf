@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-08 17:36
+@edit time: 2020-05-08 17:39
 @FilePath: /expdf/expdf/parser.py
 @desc: 解析PDF
 """
@@ -105,7 +105,7 @@ def get_stream(uri, local=False):
         if not path.exists():
             raise FileNotFoundError(f"Invalid local filename: {uri}")
         else:
-            filename, stream = path.name, path.open("rb")
+            filename, stream = path.with_suffix('').name, path.open("rb")
     else:
         content = requests.get(uri).content
         filename, stream = uri.split("/")[-1], BytesIO(content)
