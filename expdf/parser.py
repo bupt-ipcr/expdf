@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 11:47
-@FilePath: /expdf/parser.py
+@edit time: 2020-05-08 17:36
+@FilePath: /expdf/expdf/parser.py
 @desc: 解析PDF
 """
 from io import BytesIO
@@ -52,12 +52,14 @@ class ExPDFParser:
         if 'Title' in info:
             title = info['Title']
             if isinstance(title, bytes):
-                return title.decode('utf-8')
+                if title.decode('utf-8').strip():
+                    return title.decode('utf-8').strip()
             else:
-                return title
+                if title.strip():
+                    return title.strip()
         # 如果失败，尝试从metadata获取
         if 'dc' in metadata:
-            if 'title' in metadata['dc']:
+            if 'title' in metadata['dc'] and metadata['dc']['title']['x-default'].strip():
                 return metadata['dc']['title']['x-default']
             
         # 如果找不到则用filename代替
