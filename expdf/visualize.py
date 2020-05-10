@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 2020-05-08 17:05
-@edit time: 2020-05-10 10:36
+@edit time: 2020-05-10 10:50
 @FilePath: /expdf/expdf/visualize.py
 @desc: 
 """
@@ -145,3 +145,9 @@ def create_fig(data):
 
     fig.data[1].on_click(change_highlight)
     return fig
+
+
+def render(data, filename):
+    fig = create_fig(data)
+    with open(filename, 'w') as f:
+        fig.write_html(file=f)
