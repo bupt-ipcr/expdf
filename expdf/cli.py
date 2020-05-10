@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:47
+@edit time: 2020-05-10 10:57
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -60,13 +60,23 @@ def create_parser():
     return parser
 
 
-def command_line():
-    parser = create_parser()
-    args = parser.parse_args()
+def get_pdfs(parser, args):
+    """get all pdfs allocated form args
+    Parameters
+    ----------
+    parser
+        instance of :class:`argparse.ArgumentParser`, contains
+        parser infomations.
+    args
+        parser.parse_args(), all args get from command line.
 
+    Returns
+    -------
+    PDFs
+        List(pathlib.Path())
+    """
     pdfs = []
     pdf_path = here / args.pdf_path
-
     # glob all pdfs
     logger.info(f'recursive is {args.recursive}')
     if args.recursive:
@@ -100,6 +110,14 @@ def command_line():
     if pdfs == []:
         logger.warning(f'no pdf file')
 
+    return pdfs
+
+
+def command_line():
+    parser = create_parser()
+    args = parser.parse_args()
+
+    pdfs = get_pdfs(parser, args)
     for pdf in tqdm(pdfs, desc="parser all pdfs"):
         if not pdf.exists():
             raise FileNotFoundError(f"No such file or directory: '{pdf}'")
