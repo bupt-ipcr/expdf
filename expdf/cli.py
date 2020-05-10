@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 11:07
+@edit time: 2020-05-10 11:09
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -61,6 +61,16 @@ def create_parser():
     parser.add_argument(
         '-r', '--recursive', action='store_true',
         help="treat PDF_PATH as a directory"
+    )
+
+    parser.add_argument(
+        '-v', '--vis', '--visualize', action='store_true',
+        help="create a html file for visualize"
+    )
+
+    parser.add_argument(
+        '--vis-html', metavar='HTML_FILENAME',
+        help="output file name of html visualize"
     )
 
     return parser
