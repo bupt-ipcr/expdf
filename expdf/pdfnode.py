@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:16
+@edit time: 2020-05-10 10:24
 @FilePath: /expdf/expdf/pdfnode.py
 @desc: 制作PDF图结构
 """
@@ -82,7 +82,7 @@ class PDFNode:
                     for posterity in pdf_node.posterities
                 ]
             }
-        nodes.append(node)
+            nodes.append(node)
 
         return json.dumps(nodes)
 
