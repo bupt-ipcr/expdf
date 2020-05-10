@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-01 19:17
-@FilePath: /tests/test_expdf.py
+@edit time: 2020-05-10 10:41
+@FilePath: /expdf/tests/test_expdf.py
 @desc: 测试expdf
 """
 
@@ -17,7 +17,7 @@ from expdf.parser import ExPDFParser
 class TestExPDF:
     @classmethod
     def setup_class(cls):
-        cls.expdf_parser = ExPDFParser("tests/test.pdf")
+        cls.expdf_parser = ExPDFParser("pdfs/test.pdf")
 
     def test_links(self):
         aims = {
