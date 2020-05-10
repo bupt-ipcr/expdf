@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 11:09
+@edit time: 2020-05-10 11:17
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -36,13 +36,13 @@ def create_parser():
     )
 
     parser.add_argument(
-        '-a', '--append', type=str, default=[], 
+        '-a', '--append', type=str, default=[],
         metavar='APPEND_PDF', action='append',
         help="append a PDF file", dest='append_pdfs'
     )
 
     parser.add_argument(
-        '-e', '--exclude', type=str, default=[], 
+        '-e', '--exclude', type=str, default=[],
         metavar='EXCLUDE_PDF', action='append',
         help="exclude a PDF file", dest='exclude_pdfs'
     )
@@ -70,7 +70,8 @@ def create_parser():
 
     parser.add_argument(
         '--vis-html', metavar='HTML_FILENAME',
-        help="output file name of html visualize"
+        help="output file name of html visualize",
+        default='relations.html'
     )
 
     return parser
@@ -152,6 +153,10 @@ def command_line():
     pdf_info = PDFNode.get_json()
     with open(args.output, 'w') as f:
         f.write(pdf_info)
+
+    if args.visualize:
+        pdf_json = json.loads(pdf_info)
+        render(pdf_json, args.vis_html)
 
 
 if __name__ == '__main__':
