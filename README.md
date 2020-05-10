@@ -15,7 +15,7 @@ Firstly, download and install by:
 ```bash
 git clone https://github.com/bupt-ipcr/expdf
 cd expdf
-pip install expdf
+pip install ./
 ```
 
 Secondly, use `expdf` to generate json file like:
@@ -42,7 +42,7 @@ download expdf with github and install it with pip
 ```bash
 git clone https://github.com/bupt-ipcr/expdf
 cd expdf
-pip install expdf
+pip install ./
 ```
 
 run `expdf -h` to see the help output:
