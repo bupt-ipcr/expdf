@@ -3,12 +3,11 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:12
+@edit time: 2020-05-10 10:16
 @FilePath: /expdf/expdf/pdfnode.py
 @desc: 制作PDF图结构
 """
-from collections import deque, defaultdict
-from functools import reduce
+import json
 import logging
 import re
 
@@ -58,6 +57,34 @@ class PDFNode:
     @classmethod
     def clear_nodes(cls):
         cls.instances.clear()
+
+    @classmethod
+    def get_json(cls):
+        """Get infomations of all PDFNodes as a json object"""
+        nodes = []
+        for pdf_node in cls.nodes():
+            node = {
+                'node_key': pdf_node.node_key,
+                'title': pdf_node.title,
+                'local': pdf_node.local_file,
+                'actients': [
+                    {
+                        'node_key': actient.node_key,
+                        'title': actient.title
+                    }
+                    for actient in pdf_node.actients
+                ],
+                'posterities': [
+                    {
+                        'node_key': posterity.node_key,
+                        'title': posterity.title
+                    }
+                    for posterity in pdf_node.posterities
+                ]
+            }
+        nodes.append(node)
+
+        return json.dumps(nodes)
 
     def set_refs(self, refs):
         """提供set refs的方法"""
