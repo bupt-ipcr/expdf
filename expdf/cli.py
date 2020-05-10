@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:57
+@edit time: 2020-05-10 11:00
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -39,6 +39,12 @@ def create_parser():
         '-a', type=str, metavar='APPEND_PDF', action='append',
         default=[],
         help="append a PDF file", dest='append_pdfs'
+    )
+
+    parser.add_argument(
+        '-e', type=str, metavar='EXCLUDE_PDF', action='append',
+        default=[],
+        help="exclude a PDF file", dest='exclude_pdfs'
     )
 
     parser.add_argument(
@@ -105,6 +111,13 @@ def get_pdfs(parser, args):
             msg = f"{parser.prog}: error: {append_file} is not a pdf file"
             print(msg, file=sys.stderr)
             sys.exit(2)
+
+    # exclude all pdfs, no error even exclude file not exists
+    for exclude_pdf in args.exclude_pdfs:
+        logger.info(f'exclude a pdf file {exclude_pdf}')
+        exlcude_file = here / exclude_pdf
+        if exclude_pdf in pdfs:
+            pdfs.remove(exclude_pdf)
 
     # assert pdfs is not []
     if pdfs == []:
