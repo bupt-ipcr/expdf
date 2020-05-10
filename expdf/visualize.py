@@ -1,140 +1,147 @@
 #!/usr/bin/env python
-# coding=utf-8
+# -*- coding: UTF-8 -*-
 """
 @author: Jiawei Wu
-@create time: 1970-01-01 08:00
-@edit time: 2020-04-28 12:19
-@FilePath: /expdf/visualize.py
-@desc: 可视化PDF关系
+@create time: 2020-05-08 17:05
+@edit time: 2020-05-10 10:36
+@FilePath: /expdf/expdf/visualize.py
+@desc: 
 """
-from .templates import svg_template
-R = 30   # 圆的半径
-W = 4 * R  # 圆的间距
-H = 3 * R    # 行间距
+
+import networkx as nx
+import plotly.graph_objects as go
+import json
 
 
-def infos_to_data(infos):
-    """将infos转换为render需要的格式"""
-    data = {
-        'groups': {}
-    }
-    for gid, gcontent in enumerate(infos):
-        group = {}
-        # 获取group对应的画幅
-        levels, min_level = gcontent['levels'], gcontent['min_level']
-        max_nodes = max(len(nodes) for level, nodes in levels.items())
-        width, height = max_nodes + 1, abs(min_level) + 1
+def create_digraph(data):
+    DG = nx.DiGraph()
+    # add nodes
+    for index, node in enumerate(data):
+        DG.add_node(node['node_key'], title=node['title'], local=node['local'],
+                    actients=node['actients'], posterities=node['posterities'], index=index, highlight=False)
 
-        group['width'], group['height'] = width, height
+    # add edges
+    for node in data:
+        for actient in node['actients']:
+            DG.add_edge(node['node_key'], actient['node_key'])
 
-        circles, lines = {}, []
-        # 获取每个circle的属性与每个line的属性
-        for level, nodes in levels.items():
-            # 获取上层nodes
-            pres = levels.get(level+1, [])
-            # 遍历这一层nodes
-            n_nodes = len(nodes)
-            for order, node in enumerate(nodes):
-                # 确定每个circle属性
-                circle = {
-                    'x': order - n_nodes / 2 + width / 2,
-                    'y': abs(level) + 1,
-                    'title': node['title'],
-                    'local': node['local_file']
-                }
-                circles[node['title']] = circle
+    # get pos
+    pos_dict = nx.drawing.layout.fruchterman_reingold_layout(DG)
+    # set pos
+    for node, pos in pos_dict.items():
+        DG.nodes[node]['pos'] = pos
 
-                # 确定所有相关的线
-                for pre in pres:
-                    if node['title'] in pre['children_titles']:
-                        line = {
-                            'x1': circles[pre['title']]['x'],
-                            'y1': circles[pre['title']]['y'],
-                            'x2': circle['x'],
-                            'y2': circle['y'],
-                            'start': pre['title'],
-                            'end': node['title'],
-                        }
-                        lines.append(line)
-
-        group['circles'] = list(circles.values())
-        group['lines'] = lines
-        data['groups'][gid] = group
-    return data
+    return DG
 
 
-def create_lines_html(lines):
-    lines_template = '''<g>
-    {}
-    </g>'''
-    line_template = '''<line class="link" x1="{}" y1="{}" x2="{}" y2="{}" start="{}" end="{}"></line>'''
-    line_htmls = (line_template.format(l['x1'] * W, l['y1'] * H, l['x2']
-                                       * W, l['y2'] * H, l['start'], l['end']) for l in lines)
-    join_html = '      \r\n'.join(line_htmls)
-    lines_html = lines_template.format(join_html)
-    return lines_html
+def create_edge_trace(DG):
+    # edge trace data
+    edge_trace_x, edge_trace_y = [], []
+    for edge in DG.edges():
+        x0, y0 = DG.nodes[edge[0]]['pos']
+        x1, y1 = DG.nodes[edge[1]]['pos']
+        edge_trace_x.extend([x0, x1, None])
+        edge_trace_y.extend([y0, y1, None])
+
+    # create trace
+    edge_trace = go.Scatter(
+        x=edge_trace_x, y=edge_trace_y,
+        line=dict(width=0.5, color='#888'),
+        hoverinfo='none',
+        mode='lines')
+    return edge_trace
 
 
-def create_circles_html(circles):
-    circles_template = '''<g>
-    {}
-    </g>'''
-    circle_template = '''
-      <g class="node" transform="translate({}, {})" style="fill: white;">
-        <circle class="{}" r="{}" title="{}"></circle>
-        <text class="nodeLabel" transform="translate({}, {})">{}</text>
-      </g>
-    '''
-    circle_htmls = (circle_template.format(
-        circle['x'] * W, circle['y'] * H, 'local' if circle['local'] else 'nonlocal', R,
-        circle['title'], -W/4, -H/2, circle['title']) for circle in circles)
-    join_html = '      \r\n'.join(circle_htmls)
-    circles_html = circles_template.format(join_html)
-    return circles_html
+def create_node_trace(DG):
+    # node trace data
+    node_trace_x, node_trace_y = [], []
+    for index, node_key in enumerate(DG.nodes()):
+        x, y = DG.nodes[node_key]['pos']
+        node_trace_x.append(x)
+        node_trace_y.append(y)
+
+    # create trace
+    node_trace = go.Scatter(
+        x=node_trace_x, y=node_trace_y,
+        mode='markers',
+        hoverinfo='text',
+        marker=dict(
+            showscale=True,
+            colorscale='YlGnBu',
+            reversescale=True,
+            color=[],
+            size=[],
+            colorbar=dict(
+                thickness=15,
+                title='Node Connections',
+                xanchor='left',
+                titleside='right'
+            ),
+            line=dict(
+                width=2,
+                color=[]
+            )))
+
+    node_adjacencies = [len(adjacencies[1]) for adjacencies in DG.adjacency()]
+    node_text = [DG.nodes[node]['title'] for node in DG.nodes()]
+    node_marker_line_color = ['black'] * DG.number_of_nodes()
+
+    node_trace.text = node_text.copy()
+    node_trace.marker.color = node_adjacencies.copy()
+    node_trace.marker.size = [10] * len(node_adjacencies)
+    node_trace.marker.line.color = node_marker_line_color.copy()
+
+    return node_trace
 
 
-def create_group_html(item_htmls, offset):
-    group_template = '''
-    <g transform="translate({}, 0)">
-        {}
-    </g>
-    '''
-    join_html = '    \r\n'.join(item_htmls)
-    group_html = group_template.format(offset * W, join_html)
-    return group_html
+def create_fig(data):
+    # create DG
+    DG = create_digraph(data)
+    # create fig
+    edge_trace, node_trace = create_edge_trace(DG), create_node_trace(DG)
+    fig = go.FigureWidget(data=[edge_trace, node_trace],
+                          layout=go.Layout(
+        title='<br>Network graph made with Python',
+        titlefont_size=16,
+        showlegend=False,
+        hovermode='closest',
+        margin=dict(b=20, l=5, r=5, t=40),
+        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
+    )
 
+    # click event
+    node_keys = [node for node in DG.nodes()]
+    node_marker_line_color = ['black'] * DG.number_of_nodes()
+    hflag = False
 
-def create_svg_html(group_htmls, max_height):
-    svg_template = '''<svg width="100%" height="{}px" pointer-events="all" xmlns="http://www.w3.org/2000/svg" version="1.1">
-    {}
-    </svg>
-    '''
-    join_html = '\r\n'.join(group_htmls)
-    svg_html = svg_template.format((max_height + 2) * H, join_html)
-    return svg_html
+    def highlight(trace, points, state):
+        lc = list(trace.marker.line.color)
+        for idx in points.point_inds:
+            point_node_key = node_keys[idx]
+            # get all nodes
+            associate_nodes = DG.nodes[point_node_key]['actients'] + DG.nodes[point_node_key]['posterities']
+            associate_nodes = [associate_node['node_key'] for associate_node in associate_nodes]
+            associate_nodes.append(point_node_key)
+            for associate_node in associate_nodes:
+                # change color
+                node_index = DG.nodes[associate_node]['index']
+                lc[node_index] = 'orange'
+        with fig.batch_update():
+            trace.marker.line.color = lc
 
+    def un_highlight(trace, points, state):
+        with fig.batch_update():
+            trace.marker.line.color = node_marker_line_color.copy()
 
-def gererate_svg(data):
-    groups = data['groups']
-    offset = 1
-    max_height = 0
-    group_htmls = []
-    for gid, group in groups.items():
-        lines, circles = group['lines'], group['circles']
-        lines_html = create_lines_html(lines)
-        circles_html = create_circles_html(circles)
-        group_html = create_group_html([lines_html, circles_html], offset)
-        offset += group['width']
-        max_height = max(max_height, group['height'])
-        group_htmls.append(group_html)
-    svg_html = create_svg_html(group_htmls, max_height)
-    html = svg_template
-    html = html.replace('SVG_CONTENT', svg_html)
-    return html
+    def change_highlight(trace, points, state):
+        nonlocal hflag
+        if hflag:
+            hflag = False
+            un_highlight(trace, points, state)
+        else:
+            hflag = True
+            highlight(trace, points, state)
 
-
-def render(infos, filename):
-    """接口"""
-    html = gererate_svg(infos_to_data(infos))
-    with open(filename, 'w') as f:
-        f.write(html)
+    fig.data[1].on_click(change_highlight)
+    return fig
