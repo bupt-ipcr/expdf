@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:10
+@edit time: 2020-05-10 10:12
 @FilePath: /expdf/tests/test_pdfnode.py
 @desc: 测试Graph模块是否正常工作
 """
@@ -51,7 +51,7 @@ class TestPDFNode:
         assert n0 is n0copy
 
         # 所有用到的node都应该被创建
-        nodes = PDFNode.get_nodes()
+        nodes = PDFNode.nodes()
         assert nodes == [n0, PDFNode('ta'), PDFNode('tb')]
 
     def test_relations(self):
@@ -107,5 +107,5 @@ class TestLocalPDFNode:
         assert not has_except, "Unexpected error in override LocalPDFNode instance"
 
         assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
-        assert PDFNode.get_nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
+        assert PDFNode.nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
 

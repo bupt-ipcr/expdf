@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:08
-@FilePath: /expdf/expdf/graph.py
+@edit time: 2020-05-10 10:12
+@FilePath: /expdf/expdf/pdfnode.py
 @desc: 制作PDF图结构
 """
 from collections import deque, defaultdict
@@ -52,7 +52,7 @@ class PDFNode:
             return obj
 
     @classmethod
-    def get_nodes(cls):
+    def nodes(cls):
         return list(cls.instances.values())
 
     @classmethod
