@@ -2,9 +2,38 @@
 
 ## Overview
 
-ExPDF is a tool that can generate citation relationship between PDFs. 
+ExPDF is a tool that can generate citation relationship between PDFs.
 
-Based on pdfminer, expdf use SVG to visualize. 
+Based on pdfminer, expdf use SVG to visualize.
+
+## Quickstart
+
+With `Jupyter Notebook`, it is easy to visuzlize citation relationship between PDFs.  
+
+Firstly, download and install by:
+
+```bash
+git clone https://github.com/bupt-ipcr/expdf
+cd expdf
+pip install expdf
+```
+
+Secondly, use `expdf` to generate json file like:
+
+```bash
+expdf -d pdfs/ASV -o data.json
+```
+
+Finally, open `jupyter notebook` and try:
+
+```python
+  import json
+  from expdf.visualize import create_fig
+  with open('data.json', 'r') as f:
+    data = json.load(f)
+  fig = create_fig(data)
+  fig
+```
 
 ## Installation
 
