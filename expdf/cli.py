@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-06 16:45
-@FilePath: /expdf/cli.py
+@edit time: 2020-05-10 10:46
+@FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
 and generate reference relation of all PDFs(given or inside PDF)
@@ -13,10 +13,11 @@ and generate reference relation of all PDFs(given or inside PDF)
 import argparse
 from expdf import (
     LocalPDFNode,
-    Graph,
     ExPDFParser,
     render
 )
+from expdf.graph import PDFNode
+import json
 import logging
 from pathlib import Path
 from tqdm import tqdm
@@ -24,7 +25,7 @@ import sys
 
 here = Path().resolve()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 
 def create_parser():
@@ -56,24 +57,6 @@ def create_parser():
     )
 
     return parser
-
-
-def graph_all(pdfs):
-    logger.info(f'generate expdf for pdf in pdfs')
-    for pdf in tqdm(pdfs, desc="parser all pdfs"):
-        if not pdf.exists():
-            raise FileNotFoundError(f"No such file or directory: '{pdf}'")
-        else:
-            logger.info(f'create LocalPDFNode of {pdf}')
-            expdf_parser = ExPDFParser(f"{pdf.resolve()}")
-            localPDFNode = LocalPDFNode(expdf_parser.title, expdf_parser.refs)
-
-    logger.info(f'generate graph')
-    graph = Graph()
-    graph.calculate()
-
-    logger.info(f'generate svg html')
-    render(graph.infos, 'svg.html')
 
 
 def command_line():
@@ -116,8 +99,17 @@ def command_line():
     if pdfs == []:
         logger.warning(f'no pdf file')
 
-    if pdfs:
-        graph_all(pdfs)
+    for pdf in tqdm(pdfs, desc="parser all pdfs"):
+        if not pdf.exists():
+            raise FileNotFoundError(f"No such file or directory: '{pdf}'")
+        else:
+            logger.info(f'create LocalPDFNode of {pdf}')
+            expdf_parser = ExPDFParser(f"{pdf.resolve()}")
+            localPDFNode = LocalPDFNode(expdf_parser.title, expdf_parser.refs)
+
+    pdf_info = PDFNode.get_json()
+    with open(args.output, 'w') as f:
+        f.write(pdf_info)
 
 
 if __name__ == '__main__':
