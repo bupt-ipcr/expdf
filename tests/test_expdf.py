@@ -3,13 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:41
+@edit time: 2020-05-10 10:51
 @FilePath: /expdf/tests/test_expdf.py
 @desc: 测试expdf
 """
 
 
-from expdf.graph import PDFNode, LocalPDFNode, Graph
+from expdf.pdfnode import PDFNode, LocalPDFNode
 from expdf.visualize import render
 from expdf.parser import ExPDFParser
 
