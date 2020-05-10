@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 11:00
+@edit time: 2020-05-10 11:01
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -36,14 +36,14 @@ def create_parser():
     )
 
     parser.add_argument(
-        '-a', type=str, metavar='APPEND_PDF', action='append',
-        default=[],
+        '-a', '--append', type=str, default=[], 
+        metavar='APPEND_PDF', action='append',
         help="append a PDF file", dest='append_pdfs'
     )
 
     parser.add_argument(
-        '-e', type=str, metavar='EXCLUDE_PDF', action='append',
-        default=[],
+        '-e', '--exclude', type=str, default=[], 
+        metavar='EXCLUDE_PDF', action='append',
         help="exclude a PDF file", dest='exclude_pdfs'
     )
 
