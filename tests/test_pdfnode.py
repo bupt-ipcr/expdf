@@ -3,12 +3,12 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-04-30 11:24
-@FilePath: /tests/test_graph.py
+@edit time: 2020-05-10 10:10
+@FilePath: /expdf/tests/test_pdfnode.py
 @desc: 测试Graph模块是否正常工作
 """
 
-from expdf.graph import PDFNode, LocalPDFNode, Graph
+from expdf.graph import PDFNode, LocalPDFNode
 
 
 class TestPDFNode:
@@ -109,50 +109,3 @@ class TestLocalPDFNode:
         assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
         assert PDFNode.get_nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
 
-
-class TestGraph:
-    """测试graph计算"""
-    @classmethod
-    def setup_class(cls):
-        PDFNode.clear_nodes()
-
-    @classmethod
-    def teardown_class(cls):
-        PDFNode.clear_nodes()
-
-    def test_graph_calc(self):
-        LocalPDFNode('title0', refs=['title1', 'title2'])
-        LocalPDFNode('title1', refs=['title3'])
-        LocalPDFNode('title2', refs=['title3'])
-        graph = Graph()
-        graph.calculate()
-
-        infos = graph.infos
-
-        assert infos[0]['levels'][0] == [{'children_titles': {'title2', 'title1'},
-                                          'local_file': False,
-                                          'parents_titles': set(),
-                                          'title': 'title3'}]
-        assert any((
-            infos[0]['levels'][-1] == [{'children_titles': {'title0'},
-                                        'local_file': True,
-                                        'parents_titles': {'title3'},
-                                        'title': 'title2'},
-                                       {'children_titles': {'title0'},
-                                        'local_file': True,
-                                        'parents_titles': {'title3'},
-                                        'title': 'title1'}],
-            infos[0]['levels'][-1] == [{'children_titles': {'title0'},
-                                        'local_file': True,
-                                        'parents_titles': {'title3'},
-                                        'title': 'title1'},
-                                       {'children_titles': {'title0'},
-                                        'local_file': True,
-                                        'parents_titles': {'title3'},
-                                        'title': 'title2'}]
-        ))
-        assert infos[0]['levels'][-2] == [{'children_titles': set(),
-                                           'local_file': True,
-                                           'parents_titles': {'title2', 'title1'},
-                                           'title': 'title0'}]
-        assert infos[0]['min_level'] == -2
