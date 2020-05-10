@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 2019-11-25 11:08
-@edit time: 2020-05-06 11:50
-@FilePath: /setup.py
+@edit time: 2020-05-10 11:59
+@FilePath: /expdf/setup.py
 """
 
 # Note: To use the 'upload' functionality of this file, you must:
@@ -24,11 +24,11 @@ URL = 'https://github.com/bupt-ipcr/expdf'
 EMAIL = '13260322877@163.com'
 AUTHOR = 'Jiawei Wu',
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'pdfminer2', 'tqdm'
+    'requests', 'pdfminer2', 'tqdm', 'networkx', 'plotly'
 ]
 
 # What packages are optional?
