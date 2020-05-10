@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 11:05
+@edit time: 2020-05-10 11:07
 @FilePath: /expdf/expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
@@ -42,11 +42,6 @@ def create_parser():
     )
 
     parser.add_argument(
-        '-d', '-D", --dir', '--directory', action='store_true',
-        help="treat PDF_PATH as a directory"
-    )
-
-    parser.add_argument(
         '-e', '--exclude', type=str, default=[], 
         metavar='EXCLUDE_PDF', action='append',
         help="exclude a PDF file", dest='exclude_pdfs'
@@ -61,6 +56,11 @@ def create_parser():
     parser.add_argument(
         'pdf_path', metavar='PDF_PATH',
         help="PDF path, or directory of PDFs if -r is used"
+    )
+
+    parser.add_argument(
+        '-r', '--recursive', action='store_true',
+        help="treat PDF_PATH as a directory"
     )
 
     return parser
@@ -84,8 +84,8 @@ def get_pdfs(parser, args):
     pdfs = []
     pdf_path = here / args.pdf_path
     # glob all pdfs
-    logger.info(f'treat as directory is {args.directory}')
-    if args.directory:
+    logger.info(f'recursive is {args.recursive}')
+    if args.recursive:
         logger.info(f'find all pdf in {args.pdf_path}')
         for file in pdf_path.iterdir():
             logger.info(f'  find a file {file}')
