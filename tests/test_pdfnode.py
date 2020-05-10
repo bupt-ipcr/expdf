@@ -3,12 +3,13 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 10:12
+@edit time: 2020-05-10 10:29
 @FilePath: /expdf/tests/test_pdfnode.py
 @desc: 测试Graph模块是否正常工作
 """
 
-from expdf.graph import PDFNode, LocalPDFNode
+from expdf.pdfnode import PDFNode, LocalPDFNode
+import json
 
 
 class TestPDFNode:
@@ -72,17 +73,48 @@ class TestPDFNode:
         """
         n0 = PDFNode('A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations.')
         # 验证记录的key是否小写且去除特殊符号
-        assert list(PDFNode.instances.keys()) == ['acollaborativedistributedstrategyformultiagentreinforcementlearningthroughconsensusinnovations']
+        assert list(PDFNode.instances.keys()) == [
+            'acollaborativedistributedstrategyformultiagentreinforcementlearningthroughconsensusinnovations']
         # 验证本身的title没变化
         assert n0.title == 'A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations.'
 
         # 验证仅符号不同的Node不会被新建
-        n0new = PDFNode('?A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
+        n0new = PDFNode(
+            '?A collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
         assert n0new == n0
 
         # 验证字母或数字不同的Node会被新建
-        n1 = PDFNode('A new collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
+        n1 = PDFNode(
+            'A new collaborative distributed strategy for multi-agent reinforcement learning through consensus + innovations')
         assert n0 != n1
+
+    def test_get_json(self):
+        """test method get_json"""
+        PDFNode('title0', ['title2'])
+        PDFNode('title1', ['title2'])
+        PDFNode('title3', ['title0'])
+        pdf_info = json.loads(PDFNode.get_json())
+        
+        # posterities is a set and convert to list may have different order
+        assert pdf_info == [
+            {'node_key': 'title0', 'title': 'title0', 'local': False, 'actients': [
+                {'node_key': 'title2', 'title': 'title2'}], 'posterities': [{'node_key': 'title3', 'title': 'title3'}]},
+            {'node_key': 'title2', 'title': 'title2', 'local': False, 'actients': [], 'posterities': [
+                {'node_key': 'title0', 'title': 'title0'}, {'node_key': 'title1', 'title': 'title1'}]},
+            {'node_key': 'title1', 'title': 'title1', 'local': False, 'actients': [
+                {'node_key': 'title2', 'title': 'title2'}], 'posterities': []},
+            {'node_key': 'title3', 'title': 'title3', 'local': False, 'actients': [
+                {'node_key': 'title0', 'title': 'title0'}], 'posterities': []}
+        ] or pdf_info == [
+            {'node_key': 'title0', 'title': 'title0', 'local': False, 'actients': [
+                {'node_key': 'title2', 'title': 'title2'}], 'posterities': [{'node_key': 'title3', 'title': 'title3'}]},
+            {'node_key': 'title2', 'title': 'title2', 'local': False, 'actients': [], 'posterities': [
+                {'node_key': 'title1', 'title': 'title1'}, {'node_key': 'title0', 'title': 'title0'}]},
+            {'node_key': 'title1', 'title': 'title1', 'local': False, 'actients': [
+                {'node_key': 'title2', 'title': 'title2'}], 'posterities': []},
+            {'node_key': 'title3', 'title': 'title3', 'local': False, 'actients': [
+                {'node_key': 'title0', 'title': 'title0'}], 'posterities': []}
+        ]
 
 
 class TestLocalPDFNode:
@@ -108,4 +140,3 @@ class TestLocalPDFNode:
 
         assert n0.actients == {PDFNode('ta'), PDFNode('tc')}
         assert PDFNode.nodes() == [PDFNode('title0'), PDFNode('ta'), PDFNode('tb'), PDFNode('tc')]
-
