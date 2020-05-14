@@ -108,7 +108,7 @@ To **generate visualize html file**, use `-v` and `--vis-html` like:
 
 ```bash
 expdf -r pdfs/ASV -v --vis-html='vis.html'
-
+```
 ## Usage as Python library
 
 Here we have three main parts of expdfs: `ExPDFParser`, `Graph` and `render`.
