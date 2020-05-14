@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-14 21:12
-@FilePath: /expdf/extractor.py
+@edit time: 2020-05-14 21:53
+@FilePath: /expdf/expdf/extractor.py
 @desc: module of extractors, to get special infomations out.
 """
 import re
@@ -105,14 +105,27 @@ class Link:
 
 
 def get_ref_title(ref_text, *, strict=False):
-    """从引用文本中匹配引用文章标题
+    """Get title of an reference from text of it.
 
-    使用不同的标准格式匹配title，匹配失败的使用文本作为title返回
-    考虑到分割获取ref_text的文本会有污染，使用re.search查找
+    Try to matching with different special regex expression,
+    return matched content. If failed in matching, return 
+    complete ref_text as title if strict mode is off, or return
+    None.
 
-    @param: ref_text: 引用原文
-    @param: strict: 严格模式（只有符合匹配规则的才返回）
-    @return: ref title 引用文章的标题
+    Parameters
+    ----------
+    ref_text : str, a string that contains(may contains) citation.
+        ref_text is usually matched by other rule such as regex
+        expression, it contains text of a citation in the paper,
+        or may not.
+    
+    strict : bool, keyword only, set to True to open strict mode.
+        In strict mode, ref_text that match none of regex expressions
+        will return None, instand of ref_text it self.
+    
+    Returns
+    -------
+    ref_title : str, title of citation find in reference text
     """
     # pre process
     ref_text = ref_text.replace('- ', '-').replace('  ', ' ')
@@ -124,9 +137,9 @@ def get_ref_title(ref_text, *, strict=False):
         return re.search(quote_re, ref_text, re.I).groups()[1]
 
     # e.g. L. Breslau, Pei Cao, Li Fan, G. Phillips, and S. Shenker. Web caching and zipf-like distributions: evidence and implications. In INFOCOM ’99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE, volume 1, pages 126–134 vol.1, Mar 1999.
-    dot_re = r'''.+?(?<!.{4}[A-Z]|et al)\.\s*([()0-9]\.)?\s*([^.]+?[^A-Z])\.(.+)$'''  # 注意这里不能用re.I
+    dot_re = r'''.+?(?<!.{4}[A-Z]|et al)\.\s*([()0-9]\.)?\s*([^.]+?[^A-Z])\.(.+)$'''  # note: cannot use re.I here
     if re.search(dot_re, ref_text):
-        # 光搜索到句子还不行，需要后续有标识
+        # dot_re limits too loose, use tail_re as supplement
         groups = re.search(dot_re, ref_text).groups()
         if not strict or re.search(tail_re, groups[2], re.I):
             return groups[1]
