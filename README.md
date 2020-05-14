@@ -2,9 +2,9 @@
 
 ## Overview
 
-ExPDF is a tool that can generate citation relationship between PDFs.
+ExPDF is a tool that can generate citation relationship between PDFs, and create beautiful, interactive SVG figure inside Jupyter Notebook.  
 
-Based on pdfminer, expdf use SVG to visualize.
+![image](https://user-images.githubusercontent.com/38694199/81917751-2ef60000-9608-11ea-9c83-98f45010a5e7.png)
 
 ## Quickstart
 
