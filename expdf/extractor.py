@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-14 17:47
+@edit time: 2020-05-14 21:12
 @FilePath: /expdf/extractor.py
 @desc: module of extractors, to get special infomations out.
 """
@@ -12,15 +12,95 @@ __all__ = [get_ref_title, get_links, get_urls]
 
 
 class Link:
+    """Link(linktype='', uri='', link='')
+    
+    A simple class to record a link (find in a PDF file),
+    infomations include type of link, uniform resource identifier
+    of the link(specify by link type) and the complete link.
+    
+    Parameters
+    ----------
+    linktype : str, typically in ['doi', 'arxiv', 'pdf', 'url']
+        linktype is type of the link, 'doi' means a doi link,
+        'arxiv' means a arxiv link, 'pdf' means a url end with 
+        'pdf' and 'url' means a normal link.
+    
+    uri : str, uniform resource identifier of a link
+        for doi: doi reference location
+        for arxiv: serial number with dot of an arxiv paper
+        for pdf: the url
+        for url: the url
+
+    link : str, complete link of a link
+        link of a Link instance should be unique.
+    
+    Notes
+    -----
+    class Link will not check whether attribute link is corrspond to 
+    linktype and uri.
+
+    Examples
+    --------
+    Create a Link instance.
+    >>> link = Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602')
+
+    Check whether two Link instance is same at link, ignoring difference
+    in 'http' and 'https'.
+    >>> link1 = Link('arxiv', '1312.5602',
+    ... 'https://arxiv.org/abs/1312.5602')
+    >>> link2 = Link('url', 'https://arxiv.org/abs/1312.5602',
+    ... 'https://arxiv.org/abs/1312.5602')
+    >>> link1.equal(link2)
+    >>> link1 == link2
+    True
+
+    Strickly check whether two Link instance is equal.
+    >>> link1 = Link('arxiv', '1312.5602',
+    ... 'https://arxiv.org/abs/1312.5602')
+    >>> link2 = Link('url', 'https://arxiv.org/abs/1312.5602',
+    ... 'https://arxiv.org/abs/1312.5602')
+    >>> link1.equal(link2)
+    False
+    """
     def __init__(self, linktype, uri, link):
+        """Initialize a link with attributes of a link
+
+        Parameters
+        ----------
+        linktype : str, typically in ['doi', 'arxiv', 'pdf', 'url']
+            linktype is type of the link, 'doi' means a doi link,
+            'arxiv' means a arxiv link, 'pdf' means a url end with 
+            'pdf' and 'url' means a normal link.
+        
+        uri : str, uniform resource identifier of a link
+            for doi: doi reference location
+            for arxiv: serial number with dot of an arxiv paper
+            for pdf: the url
+            for url: the url
+
+        link : str, complete link of a link
+            link of a Link instance should be unique.
+
+        Examples
+        --------
+        >>> link = Link('arxiv', '1312.5602', 'https://arxiv.org/abs/1312.5602')    
+        """
         self.linktype, self.uri, self.link = linktype, uri, link
 
     def __eq__(self, other):
-        # 兼容http与https的差异
+        """Return self==value by compare attribute link.
+
+        Difference between 'http' and 'https' will be ignored, 
+        method returns True even linktype and uri are not the same.
+        """
         return self.link == other.link or self.link.replace('https', 'http') == other.link.replace('https', 'http')
 
     def equal(self, other):
-        """严格定义相等"""
+        """Strictly defined equal between self and other Link instance.
+        
+        Only if two Link instances have same linktype, uri and link, 
+        they are equal.
+        """
         return self.uri == other.uri and self.linktype == other.linktype and self.link == other.link
 
 
