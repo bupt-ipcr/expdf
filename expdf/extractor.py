@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-14 21:53
+@edit time: 2020-05-14 22:21
 @FilePath: /expdf/expdf/extractor.py
 @desc: module of extractors, to get special infomations out.
 """
@@ -150,9 +150,15 @@ def get_ref_title(ref_text, *, strict=False):
 
 
 def get_urls(text):
-    """从text中匹配 urls
-    @param text: 文本
-    @return set, all urls
+    """Extract urls from text.
+
+    Parameters
+    ----------
+    text : text that contains url(s)
+
+    Returns
+    -------
+    links : a list of Links of urls in the text.
     """
     # URL
     URL_REGEX = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"""
@@ -167,9 +173,15 @@ def get_urls(text):
 
 
 def get_arxivs(text):
-    """从text中匹配 arxivs
-    @param text: 文本
-    @return set, all arxivs
+    """Extract arxivs from text.
+
+    Parameters
+    ----------
+    text : text that contains arxiv(s)
+
+    Returns
+    -------
+    links : a list of Links of arxivs in the text.
     """
     re_texts = [r"""arxiv:\s?([^\s,]+)""", r"""arXiv\.org\.\s?([^\s,]+)"""]
     re_url = r"""arxiv.org/abs/([^\s,]+)"""
@@ -183,9 +195,15 @@ def get_arxivs(text):
 
 
 def get_dois(text):
-    """从text中匹配 dois
-    @param text: 文本
-    @return set, all dois
+    """Extract dois from text.
+
+    Parameters
+    ----------
+    text : text that contains doi(s)
+
+    Returns
+    -------
+    links : a list of Links of dois in the text.
     """
     re_text = r"""DOI:\s?([^\s,]+)"""
     re_url = r'''https?://doi.org/([^\s,]+)'''
@@ -198,18 +216,27 @@ def get_dois(text):
 
 
 def get_links(text):
-    """获取uri中包含的所有link
-    依次用arxiv, doi, url规则匹配links
-    对于url匹配的结果，要查找有没有相等的Link，避免出现重复
+    """Extract all kind of links from text.
 
-    @param text: 需要处理的文本
-    @return: list link列表
+    Ordanaty get arxivs, dois and urls from text.
+    Link of type doi and arxiv will never have same link,
+    but when extract urls, all of returned links will be
+    checked to ensure no repeat links.
+
+
+   Parameters
+    ----------
+    text : text that contains doi(s)
+
+    Returns
+    -------
+    links : a list of Links of all kinds.
     """
     links = []
-    # 对于arxiv和doi，不考虑重复
+    # for arxivsd and dois
     links.extend(get_arxivs(text))
     links.extend(get_dois(text))
-    # 对于url要检查重复
+    # repeat check for urls
     for link in get_urls(text):
         if link not in links:
             links.append(link)
