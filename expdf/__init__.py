@@ -5,17 +5,15 @@ Generate citation relationship between PDFs, and visualize it.
 
 Features
 
-* Extract references from PDF
-@FilePath: /expdf/expdf/__init__.py
-* Work on HTML and Jupyter notebook
-* Use as command-line tool or Python package
+- Extract references from PDF
+- Work on HTML and Jupyter notebook
+- Use as command-line tool or Python package
 
 Usage
 
-* Use as command-line tool `expdf`
-Command-line tool supports generate json file and HTML visualize file.
+- Use as command-line tool `expdf`
 
-* Use as Python Package `import expdf`
+- Use as Python Package `import expdf`
 >>> from expdf import ExPDFParser
 >>> pdf = ExPDFParser("tests/test.pdf")
 >>> print('title: ', pdf.title)
@@ -26,7 +24,7 @@ Command-line tool supports generate json file and HTML visualize file.
 >>> for ref in pdf.refs:
 ...     print(f'- {ref}')
 
-* Use in jupyter notebook with generated json file
+- Use in jupyter notebook with generated json file
 import json
 from expdf.visualize import create_fig
 with open('data.json', 'r') as f:
