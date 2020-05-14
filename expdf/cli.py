@@ -3,8 +3,8 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-10 12:03
-@FilePath: /expdf/expdf/cli.py
+@edit time: 2020-05-14 17:44
+@FilePath: /expdf/cli.py
 @desc:
 Command Line tool to get metadata, references and links from local ot remote PDFs,
 and generate reference relation of all PDFs(given or inside PDF)
@@ -80,19 +80,24 @@ def create_parser():
 
 
 def get_pdfs(parser, args):
-    """get all pdfs allocated form args
+    """Get list of path of PDFs allocated from argument parser.
+    
+    Get path of PDF with parameter `PDF_PATH`, or get all path of PDFs
+    in `PDF_PATH` if `-r` is specified. Then check list of `APPEND_PDF`
+    specified by `-a`, and exclude all PDFs in list of `EXCLUDE_PDF`
+    specified by `-e`.
+    
+    Any of the path is subscribed by a instance of `pathlib.Path`.
+    
     Parameters
     ----------
-    parser
-        instance of :class:`argparse.ArgumentParser`, contains
+    parser : instance of :class:`argparse.ArgumentParser`, contains
         parser infomations.
-    args
-        parser.parse_args(), all args get from command line.
+    args : parser.parse_args(), all args get from command line.
 
     Returns
     -------
-    PDFs
-        List(pathlib.Path())
+    PDFs : list of instance of :class: `pathlib.Path`
     """
     pdfs = []
     pdf_path = here / args.pdf_path
@@ -140,6 +145,7 @@ def get_pdfs(parser, args):
 
 
 def command_line():
+    """Command line entry of expdf."""
     parser = create_parser()
     args = parser.parse_args()
     logging.info(args)
