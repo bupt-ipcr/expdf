@@ -3,9 +3,9 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-08 17:39
+@edit time: 2020-05-15 11:48
 @FilePath: /expdf/expdf/parser.py
-@desc: 解析PDF
+@desc: parser of expand PDF
 """
 from io import BytesIO
 from pathlib import Path
@@ -17,23 +17,65 @@ from .processors import process_doc, process_pages, process_annots, process_text
 
 
 class ExPDFParser:
-    """解析后的PDF对象
+    """ExPDFParser(uri="", local=False, strict=False)
 
-    Params:
-    - uri: resource uri, local file location or url
-    - local: default False, set True to force use local file
+    Enhanced infomations of a PDF object, includes title of the PDF,
+    all kinds of links inside PDF content, citations listed in 
+    `References`, info and metadate attribute of the PDF object.
 
-    Attributes:
-    - title
-    - links
-    - refs
-    - info
-    - metadata
+    The parser is built on pdfminer to resolve PDF object, mainly
+    use regex to extract links and citations from content of PDF.
 
-    Usage:
-    >>> expdf_parser = ExPDFParser("tests/test.pdf")
-    >>> expdf_parser.title
+    Parameters
+    ----------
+    uri : str, resource uri, local file location or a url.
+
+    local : bool, default False, set to True to force use local file.
+
+    strict : bool, default False, set to True to enable strict mode.
+        In strict mode, if title cannot be found in a citation
+        record, it will be ignored. If not in strict mode, complete
+        citation will be returned as the title.
+
+    Attributes
+    ----------
+    title : str, title of PDF.
+        Title will be searched in info and metadate attribute of the
+        PDF object, and if not found, it returns filename of uri.
+
+    links : list of inks in content of PDF.
+        The parser use regex to extract links, and return it as a simple
+        class `Link` with its type, uniform resource identifier and link.
+
+    refs : list of citation titles list in `References` part of the PDF.
+        The parser try to find out `References` part, seperate for each
+        line, then use regex to extract paper title in the citation line.
+    
+    info : dict for attribute info of the PDF object.
+
+    metadata : dict for attribute metadata of the PDF object.
+
+    Examples
+    --------
+    Use ExPDFParser to resolve PDF.
+    >>> from expdf import ExPDFParser
+    >>> pdf = ExPDFParser("pdfs/test.pdf")
+    >>> pdf.title
     'A Deep Learning Approach for Optimizing Content Delivering in Cache-Enabled HetNet'
+    >>> for ref in pdf.refs:
+    ...     print(f'- {ref}')
+    ... 
+    - Wireless caching: technical misconceptions and business barriers,
+    - Optimal Cooperative Content Caching and Delivery Policy for Heterogeneous Cellular Networks,
+    - Joint Caching, Routing, and Channel Assignment for Collaborative Small-Cell Cellular Net-works,
+    - On the Complexity of Optimal Content Placement in Hierarchical Caching Networks,
+    - Wireless Commun
+    - Efﬁcient processing of deep neural networks: A tutorial and survey
+    - Resource Man-agement with Deep Reinforcement Learning
+    - Edge Caching at Base Stations with Device-to-Device Ofﬂoading
+    - Optimal cell clustering and activation for energy saving in load-coupled wireless networks,
+    - K. Murty, Linear programming, Wiley, 1983.
+    - Minimum-Time Link Scheduling for Emptying Wireless Systems: Solution Characterization and Algorithmic Framework,
 
     """
 
