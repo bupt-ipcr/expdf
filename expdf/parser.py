@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-15 11:48
+@edit time: 2020-05-15 11:55
 @FilePath: /expdf/expdf/parser.py
 @desc: parser of expand PDF
 """
@@ -30,9 +30,11 @@ class ExPDFParser:
     ----------
     uri : str, resource uri, local file location or a url.
 
-    local : bool, default False, set to True to force use local file.
+    local : bool, default False, keyword only. Set to True to force
+        use local file.
 
-    strict : bool, default False, set to True to enable strict mode.
+    strict : bool, default False, keyword only. Set to True to 
+        enable strict mode.
         In strict mode, if title cannot be found in a citation
         record, it will be ignored. If not in strict mode, complete
         citation will be returned as the title.
@@ -79,9 +81,24 @@ class ExPDFParser:
 
     """
 
-    def __init__(self, uri, local=False):
-        filename, stream = get_stream(uri)
-        expdf = ex_parser(stream)
+    def __init__(self, uri, *, local=False, strict=False):
+        """Initialize a parser with expend attributes of a PDF.
+
+        Parameters
+        ----------
+        uri : str, resource uri, local file location or a url.
+
+        local : bool, default False, keyword only. Set to True to force
+            use local file.
+
+        strict : bool, default False, keyword only. Set to True to 
+            enable strict mode.
+            In strict mode, if title cannot be found in a citation
+            record, it will be ignored. If not in strict mode, complete
+            citation will be returned as the title.
+        """
+        filename, stream = get_stream(uri, local)
+        expdf = ex_parser(stream, strict)
         expdf.update({
             'filename': filename
         })
@@ -89,8 +106,9 @@ class ExPDFParser:
 
     @property
     def title(self):
+        """Title of PDF"""
         info, metadata = self._data['info'], self._data['metadata']
-        # 尝试从info中恢复title
+        # try to get title from info attribute
         if 'Title' in info:
             title = info['Title']
             if isinstance(title, bytes):
@@ -99,28 +117,32 @@ class ExPDFParser:
             else:
                 if title.strip():
                     return title.strip()
-        # 如果失败，尝试从metadata获取
+        # try to get title from metadata attribute
         if 'dc' in metadata:
             if 'title' in metadata['dc'] and metadata['dc']['title']['x-default'].strip():
                 return metadata['dc']['title']['x-default']
             
-        # 如果找不到则用filename代替
+        # return filename when no title can be found
         return self._data['filename']
 
     @property
     def links(self):
+        """list of inks in content of PDF."""
         return self._data['links']
 
     @property
     def refs(self):
+        """list of citation titles list in `References` part of the PDF."""
         return self._data['refs']
 
     @property
     def info(self):
+        """dict for attribute info of the PDF object."""
         return self._data['info']
 
     @property
     def metadata(self):
+        """dict for attribute metadata of the PDF object."""
         return self._data['metadata']
 
 
