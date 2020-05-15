@@ -3,12 +3,12 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-14 22:21
+@edit time: 2020-05-15 11:10
 @FilePath: /expdf/expdf/extractor.py
 @desc: module of extractors, to get special infomations out.
 """
 import re
-__all__ = [get_ref_title, get_links, get_urls]
+__all__ = ['get_ref_title', 'get_links', 'get_urls']
 
 
 class Link:
