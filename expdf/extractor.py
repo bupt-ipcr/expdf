@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
+Module of extractors, to get special infomations out.
+
+
 @author: Jiawei Wu
-@create time: 1970-01-01 08:00
-@edit time: 2020-05-15 11:10
+@edit time: 2020-05-15 11:33
 @FilePath: /expdf/expdf/extractor.py
-@desc: module of extractors, to get special infomations out.
 """
 import re
 __all__ = ['get_ref_title', 'get_links', 'get_urls']
