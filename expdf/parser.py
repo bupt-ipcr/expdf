@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-15 11:55
+@edit time: 2020-05-15 15:13
 @FilePath: /expdf/expdf/parser.py
 @desc: parser of expand PDF
 """
@@ -28,34 +28,40 @@ class ExPDFParser:
 
     Parameters
     ----------
-    uri : str, resource uri, local file location or a url.
+    uri : str
+        Resource uri, local file location or a url.
 
-    local : bool, default False, keyword only. Set to True to force
-        use local file.
+    local : bool, default False, keyword only. 
+        Set to True to force use local file.
 
-    strict : bool, default False, keyword only. Set to True to 
-        enable strict mode.
+    strict : bool, default False, keyword only. 
+        Set to True to enable strict mode.
         In strict mode, if title cannot be found in a citation
         record, it will be ignored. If not in strict mode, complete
         citation will be returned as the title.
 
     Attributes
     ----------
-    title : str, title of PDF.
+    title : str
+        Title of PDF.
         Title will be searched in info and metadate attribute of the
         PDF object, and if not found, it returns filename of uri.
 
-    links : list of inks in content of PDF.
+    links : list
+        Links in content of PDF.
         The parser use regex to extract links, and return it as a simple
         class `Link` with its type, uniform resource identifier and link.
 
-    refs : list of citation titles list in `References` part of the PDF.
+    refs : list
+        Citation titles list in `References` part of the PDF.
         The parser try to find out `References` part, seperate for each
         line, then use regex to extract paper title in the citation line.
     
-    info : dict for attribute info of the PDF object.
+    info : dict
+        Attribute info of the PDF object.
 
-    metadata : dict for attribute metadata of the PDF object.
+    metadata : dict
+        Attribute metadata of the PDF object.
 
     Examples
     --------
@@ -86,13 +92,14 @@ class ExPDFParser:
 
         Parameters
         ----------
-        uri : str, resource uri, local file location or a url.
+        uri : str
+            Resource uri, local file location or a url.
 
-        local : bool, default False, keyword only. Set to True to force
-            use local file.
+        local : bool, default False, keyword only. 
+            Set to True to force use local file.
 
-        strict : bool, default False, keyword only. Set to True to 
-            enable strict mode.
+        strict : bool, default False, keyword only. 
+            Set to True to enable strict mode.
             In strict mode, if title cannot be found in a citation
             record, it will be ignored. If not in strict mode, complete
             citation will be returned as the title.
@@ -147,23 +154,36 @@ class ExPDFParser:
 
 
 def get_stream(uri, local=False):
-    """将给定uri转换为stream
+    """Generate a byte stream from uri.
 
-    在uri中查找url
-    如果强制使用本地文件，或者没找到url，则尝试在本地打开文件
-    若在本地找不到文件则报错，否则将文件打开为stream
+    For local file, open it as a byte stream. For network
+    resource, get the resource and convert to byte stream.
 
-    如果不强制且找到了url，则向网络请求，返回数据转为stream
+    Parameters
+    ----------
+    uri : str
+        Resource uri, local file location or a url.
 
-    @param uri: 资源链接
-    @param local: 是否强制在本地查找 default False
+    local : bool, default False
+         Set to True to force use local file.
 
-    @return: stream, filename
+    Returns
+    -------
+    filename : str
+        file name of PDF in the uri.
+
+    stream : io.BytesIO
+        bytes stream of PDF in uri.
+
+    Raises
+    ------
+    FileNotFoundError
+        raise when uri is a local file, and file was not found.
     """
-    # 尝试在uri中查找url
+    # find out whether uri is a url
     urls = get_urls(uri)
     local = local or not urls
-
+    # if local is True, treat uri as local file anyway
     if local:
         path = Path(uri)
         if not path.exists():
