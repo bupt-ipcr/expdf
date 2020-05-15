@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
+Parser of extend PDF file.
+
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
 @edit time: 2020-05-15 15:31
 @FilePath: /expdf/expdf/parser.py
-@desc: parser of expand PDF
 """
 from io import BytesIO
 from pathlib import Path
