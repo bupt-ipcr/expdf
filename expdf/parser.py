@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-15 15:13
+@edit time: 2020-05-15 15:27
 @FilePath: /expdf/expdf/parser.py
 @desc: parser of expand PDF
 """
@@ -198,27 +198,63 @@ def get_stream(uri, local=False):
 
 
 def ex_parser(pdf_stream, password='', pagenos=[], maxpages=0):
-    """解析pdf stream"""
+    """Parser stream of a PDF, return dict of attributes.
+    
+    The parser use pdfminer to parse a PDF stream.
 
-    # 使用PDFMiner解析stram内容
+    The stream is converted to doc firstly, info and metadate are
+    parsed from XMP metadata of doc. The doc will be process into
+    a string text, by the way find annotates of PDF file, extract
+    links from annotates.
+
+    The text then will be processed with regex to find out links
+    and citations, links will be append to links found in annotates
+    and citations will be append to a list named refs.
+
+    Parameters
+    ----------
+    pdf_stream : io.BytesIO-like
+        pdf stream to be parsed.
+
+    password : str, optional, default ''
+        password of the PDF file.
+
+    pagenos : list, optional, default []
+        list of page numbers to be parsed.
+
+    maxpages : int, optional, default 0
+        max page number of the PDF file.
+
+    Returns
+    -------
+    pdf_dict : dict
+        dict of attributes of the PDF, includes:
+        - text : text of PDF document.
+        - info : info in XMP data of PDF file.
+        - metadata : metadata in XMP data of PDF file.
+        - links : links in PDF content and annotates.
+        - refs : citations in part `References` of PDF.
+    """
+
+    # use pdfminer to resolve pdf stream
     parser = PDFParser(pdf_stream)
     doc = PDFDocument(parser, password=password, caching=True)
 
-    # 获取info # 获取metadata（如果有）
+    # get info and metadata
     info, metadata = process_doc(doc)
 
-    # 获取pdf text信息和annots列表
+    # get text of PDF, and get list of annotates
     text, annots_list, maxpage = process_pages(doc)
 
     links, refs = [], []
 
-    # 处理annots，查找link
+    # process annotates, find links
     for annots in annots_list:
         annots_links = process_annots(annots)
         if annots_links:
             links.extend(annots_links)
 
-    # 处理text，查找link和ref
+    # process text, find links and refs
     text_links, text_refs = process_text(text)
 
     links.extend(text_links)
