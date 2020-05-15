@@ -6,7 +6,7 @@ relationship between PDFs.
 
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-15 16:18
+@edit time: 2020-05-15 16:20
 @FilePath: /expdf/expdf/pdfnode.py
 """
 import json
@@ -183,7 +183,7 @@ class PDFNode:
         return json.dumps(nodes)
 
     def set_refs(self, refs):
-        """method to set refs的"""
+        """method to set refs"""
         self.actients = {PDFNode(ref)
                          for ref in refs} if refs is not None else set()
         for node in self.actients:
