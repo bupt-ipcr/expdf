@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
+Command Line tool to get metadata, references and links from local ot remote 
+PDFs, and generate reference relation of all PDFs(given or inside PDF)
+
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-14 17:44
-@FilePath: /expdf/cli.py
-@desc:
-Command Line tool to get metadata, references and links from local ot remote PDFs,
-and generate reference relation of all PDFs(given or inside PDF)
+@edit time: 2020-05-15 15:29
+@FilePath: /expdf/expdf/cli.py
 """
 
 import argparse
@@ -81,14 +81,14 @@ def create_parser():
 
 def get_pdfs(parser, args):
     """Get list of path of PDFs allocated from argument parser.
-    
+
     Get path of PDF with parameter `PDF_PATH`, or get all path of PDFs
     in `PDF_PATH` if `-r` is specified. Then check list of `APPEND_PDF`
     specified by `-a`, and exclude all PDFs in list of `EXCLUDE_PDF`
     specified by `-e`.
-    
+
     Any of the path is subscribed by a instance of `pathlib.Path`.
-    
+
     Parameters
     ----------
     parser : instance of :class:`argparse.ArgumentParser`, contains

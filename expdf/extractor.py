@@ -3,9 +3,8 @@
 """
 Module of extractors, to get special infomations out.
 
-
 @author: Jiawei Wu
-@edit time: 2020-05-15 11:33
+@edit time: 2020-05-15 15:31
 @FilePath: /expdf/expdf/extractor.py
 """
 import re
@@ -14,18 +13,18 @@ __all__ = ['get_ref_title', 'get_links', 'get_urls']
 
 class Link:
     """Link(linktype='', uri='', link='')
-    
+
     A simple class to record a link (find in a PDF file),
     infomations include type of link, uniform resource identifier
     of the link(specify by link type) and the complete link.
-    
+
     Parameters
     ----------
     linktype : str, typically in ['doi', 'arxiv', 'pdf', 'url']
         linktype is type of the link, 'doi' means a doi link,
         'arxiv' means a arxiv link, 'pdf' means a url end with 
         'pdf' and 'url' means a normal link.
-    
+
     uri : str, uniform resource identifier of a link
         for doi: doi reference location
         for arxiv: serial number with dot of an arxiv paper
@@ -34,7 +33,7 @@ class Link:
 
     link : str, complete link of a link
         link of a Link instance should be unique.
-    
+
     Notes
     -----
     class Link will not check whether attribute link is corrspond to 
@@ -63,6 +62,7 @@ class Link:
     >>> link1.equal(link2)
     False
     """
+
     def __init__(self, linktype, uri, link):
         """Initialize a link with attributes of a link
 
@@ -72,7 +72,7 @@ class Link:
             linktype is type of the link, 'doi' means a doi link,
             'arxiv' means a arxiv link, 'pdf' means a url end with 
             'pdf' and 'url' means a normal link.
-        
+
         uri : str, uniform resource identifier of a link
             for doi: doi reference location
             for arxiv: serial number with dot of an arxiv paper
@@ -98,7 +98,7 @@ class Link:
 
     def equal(self, other):
         """Strictly defined equal between self and other Link instance.
-        
+
         Only if two Link instances have same linktype, uri and link, 
         they are equal.
         """
@@ -119,11 +119,11 @@ def get_ref_title(ref_text, *, strict=False):
         ref_text is usually matched by other rule such as regex
         expression, it contains text of a citation in the paper,
         or may not.
-    
+
     strict : bool, keyword only, set to True to open strict mode.
         In strict mode, ref_text that match none of regex expressions
         will return None, instand of ref_text it self.
-    
+
     Returns
     -------
     ref_title : str, title of citation find in reference text
@@ -191,7 +191,8 @@ def get_arxivs(text):
         arxivs.extend(re.findall(re_text, text, re.I))
     arxivs.extend(re.findall(re_url, text, re.I))
 
-    links = [Link('arxiv', arxiv, f'https://arxiv.org/abs/{arxiv}') for arxiv in set([r.strip(".") for r in arxivs])]
+    links = [Link('arxiv', arxiv, f'https://arxiv.org/abs/{arxiv}')
+             for arxiv in set([r.strip(".") for r in arxivs])]
     return links
 
 
@@ -212,7 +213,8 @@ def get_dois(text):
     dois = []
     dois.extend(re.findall(re_text, text, re.I))
     dois.extend(re.findall(re_url, text, re.I))
-    links = [Link('doi', doi, f'https://doi.org/{doi}') for doi in set([r.strip(".") for r in dois])]
+    links = [Link('doi', doi, f'https://doi.org/{doi}')
+             for doi in set([r.strip(".") for r in dois])]
     return links
 
 

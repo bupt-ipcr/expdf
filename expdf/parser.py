@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 1970-01-01 08:00
-@edit time: 2020-05-15 15:27
+@edit time: 2020-05-15 15:31
 @FilePath: /expdf/expdf/parser.py
 @desc: parser of expand PDF
 """
@@ -56,7 +56,7 @@ class ExPDFParser:
         Citation titles list in `References` part of the PDF.
         The parser try to find out `References` part, seperate for each
         line, then use regex to extract paper title in the citation line.
-    
+
     info : dict
         Attribute info of the PDF object.
 
@@ -128,7 +128,7 @@ class ExPDFParser:
         if 'dc' in metadata:
             if 'title' in metadata['dc'] and metadata['dc']['title']['x-default'].strip():
                 return metadata['dc']['title']['x-default']
-            
+
         # return filename when no title can be found
         return self._data['filename']
 
@@ -199,7 +199,7 @@ def get_stream(uri, local=False):
 
 def ex_parser(pdf_stream, password='', pagenos=[], maxpages=0):
     """Parser stream of a PDF, return dict of attributes.
-    
+
     The parser use pdfminer to parse a PDF stream.
 
     The stream is converted to doc firstly, info and metadate are
