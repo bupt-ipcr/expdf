@@ -3,7 +3,7 @@
 """
 @author: Jiawei Wu
 @create time: 2019-11-25 11:08
-@edit time: 2020-05-10 11:59
+@edit time: 2020-05-15 20:24
 @FilePath: /expdf/setup.py
 """
 
@@ -24,7 +24,7 @@ URL = 'https://github.com/bupt-ipcr/expdf'
 EMAIL = '13260322877@163.com'
 AUTHOR = 'Jiawei Wu',
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
